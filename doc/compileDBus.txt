@@ -1,0 +1,12 @@
+Install Explat XML Parser (2.0.1)
+Install Gettext (0.14.4)
+Download DBus (1.10.4)
+Extrachiere
+
+
+
+
+1)	c:\Users\konstantin.linker\Desktop\dbus-1.10.4\build>set PATH=%PATH%;C:\Program Files (x86)\CMake\bin;
+2) 	c:\Users\konstantin.linker\Desktop\dbus-1.10.4\build>cmake -DEXPAT_INCLUDE_DIR="c:\Program Files (x86)\Expat 2.1.0\Source\lib"  -DEXPAT_LIBRARY="c:\Program File
+	s (x86)\Expat 2.1.0\Bin\libexpat.lib"  ..\cmake -G "Visual Studio 10"
+3)	c:\Users\konstantin.linker\Desktop\dbus-1.10.4\build>msbuild ALL_BUILD.vcxproj

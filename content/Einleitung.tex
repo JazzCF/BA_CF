@@ -1,0 +1,30 @@
+\chapter{Einleitung}
+
+	\vspace{10mm}
+	
+	Diese Bachelorarbeit beschreibt die Entwicklung eines plattformunabhängigen Testreport Generators. Als Marktführer in Europa für industrielle Speichermedien ist es der Swissbit AG wichtig die eigene Produktpalette stetig zu verbessern und zu erweitern. Je nach Produkt und Kunde werden verschiedene Testszenarien durchlaufen. Diese verschiedenen Tests speichern unterschiedlich große Mengen an Informationen persistent in der FlashDB-Datenbank. Mithilfe dieser Daten kann eine genaue Entwicklungs- und Prozessplanung erfolgen, desweitern ist es möglich bei auftretenden Problemen diese zu lokalisieren und nachzuvollziehen. Für eine benutzerfreundliche Darstellung dieser Informationen existiert eine Webseite, welche mithilfe eines Interfaces auf die Datenbank zugreift.  
+	
+	\vspace{5mm}
+	
+\section{Firmenvorstellung}
+	
+	"Die Swissbit AG, der größte unabhängige Speichermedienhersteller in Europa, gründete sich durch ein Management-Buy-Out von Siemens Halbleiter im Jahre 2001. Mit über 20 Jahren Erfahrung in der Speicherindustrie wurde Swissbit weltweit führend in Technologie-, hohe Qualitäts- und hohe Verlässigkeitsansprüchen für Speicherlösungen in allen hergestellten DRAM und Flash Interfaces." \cite{SwissbitAbout}
+Der Hauptsitz befindet sich in Bronschhofen, Schweiz. Weitere Niederlassungen finden sich in Deutschland, USA, Japan und Taiwan.Die Produktion beschränkt sich ausschließlich auf den Standort Berlin, wobei Forschung und Entwicklung in Deutschland, Schweiz und USA stattfinden. Weltweit beschäftigt die Swissbit AG 250 Mitarbeiter. \\
+Die Produktpalette reicht von DRAM Modulen über (micro-)SD Karten bis zu SSD Festplatten und umfasst 140 verschiedene Produkte. Um auf verschiedenen Gebieten höchsten Anforderungen gerecht zu werden, gibt es strategische Lieferantenpartnerschaften mit führenden Halbleiterherstellern wie zum Beispiel Toshiba oder Hyperstone welche Wafer Support und gemeinse Entwicklungsprogramme beinhalten.
+
+	\vspace{5mm}
+	
+\section{Motivation}
+	
+	Für die Entwicklung eines neuen Produktes oder einer neuen Produktgruppe ist es unter anderem Notwendig unterschiedliche Tests mit den Muster- oder Entwicklungsteilen durchzuführen. Die relevanten Informationen werden bis heute von einem Mitarbeiter in einer Microsoft Word Vorlage eingefügt und damit ein Testreport erstellt. Diese diese Arbeit kann nur von einem Mitarbeiter aus der Testentwicklung durchgeführt werden, da dieser mit den Abläufen der Tests und den daraus resultierenden Informationen vertraut ist. Da dies wichtige humane Ressourcen für einen gewissen Zeitraum bindet, ist es sinnvoll diesen Prozess zu automatisieren. Ein Programm womit jeder Nutzer nur durch die Eingabe eines Parameters einen Testreport erstellen kann. 
+
+	\vspace{5mm}
+	
+\section{Aufgabenstellung und Zielsetzung}
+
+Aufgabe ist die Entwicklung einer plattformunabhängigen Anwendung mit \ac{GUI} welche mittels der \ac{PA} Nummer einen Testreport im \ac{HTML} Dateiformat erzeugt. Mittels dem GUI-Toolkit Qt soll ein benutzerfreundliches Programm zu automatisierten Erstellung von Testreports entwickelt werden. Die benötigten Informationen werde aus dem Webinterface der FlashDB-Datenbank und mittels \ac{SQL} Anfragen zusammengetragen. Die Darstellung des Testreports erfolgt in \ac{HTML}, einer Auszeichnugssprache zu Darstellung von digitalen Dokumenten, und optional in dem Microsoft Word Dateiformat .docx. Der Testreport kann aus einem oder mehreren Produktionsaufträgen bestehen und ist für jede Produkttype gültig. \\
+Ziel ist es ein Softwareprojekt, mittels der Programmiersprache C++ und der Qt-Bibliothek, selbstständig zu entwickeln. Dabei sollen die im Studium und die, während der Tätigkeit als Werkstudent, erworbenen Kenntnisse und Methoden genutzt werden. 
+
+	\vspace{5mm}
+	
+\section{Vorgehensweise und Aufbau der Arbeit}

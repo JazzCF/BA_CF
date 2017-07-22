@@ -1,0 +1,241 @@
+%% Dokumentenklasse (Koma Script) -----------------------------------------
+
+\documentclass[%
+paper=A4,					% paper size --> A4 is default in Germany
+twoside=true,				% onesite or twoside printing
+openright,					% doublepage cleaning ends up right side
+parskip=full,				% spacing value / method for paragraphs
+chapterprefix=true,			% prefix for chapter marks
+12pt,						% font size
+headings=normal,			% size of headings
+bibliography=totoc,			% include bib in toc
+listof=totoc,				% include listof entries in toc
+titlepage=on,				% own page for each title page
+captions=tableabove,		% display table captions above the float env
+draft=false,				% value for draft version
+]{scrreprt}%----------------------------
+
+% **************************************************
+% Debug LaTeX Information
+% **************************************************
+%\listfiles
+
+% **************************************************
+% Information and Commands for Reuse
+% **************************************************
+\usepackage[utf8]{inputenc} % Font Encoding, benoetigt fuer Umlaute
+\usepackage[ngerman]{babel}   % Spracheinstellung
+\usepackage{units}
+
+\newcommand{\thesisTitle}{Implementierung einer plattformunabhängigen Testreport Generators}
+\newcommand{\thesisName}{Christoph Franke}
+\newcommand{\thesisSubject}{Dokumentation}
+\newcommand{\thesisDate}{29. Juni 2017}
+\newcommand{\thesisVersion}{0.1}
+
+\newcommand{\thesisFirstReviewer}{Prof. Thomas Baar}
+\newcommand{\thesisFirstReviewerUniversity}{\protect{Hochschule für Technik und Wirtschaft}}
+\newcommand{\thesisFirstReviewerDepartment}{Fachbereich 1}
+
+\newcommand{\thesisSecondReviewer}{Dr. -Ing. Marco Beyer}
+\newcommand{\thesisSecondReviewerUniversity}{\protect{Swissbit Germany AG }}
+\newcommand{\thesisSecondReviewerDepartment}{Head of Test Development}
+
+
+\newcommand{\thesisUniversity}{\protect{Hochschule für Technik und Wirtschaft}}
+\newcommand{\thesisUniversityDepartment}{Fachbereich 1}
+\newcommand{\thesisUniversityCity}{Berlin}
+\newcommand{\thesisUniversityStreetAddress}{Wilhelminenhofstraße 75A}
+\newcommand{\thesisUniversityPostalCode}{12459}
+
+
+% **************************************************
+% Load and Configure Packages
+% **************************************************
+
+
+
+
+\usepackage[					% clean thesis style
+figuresep=colon,%
+sansserif=false,%
+hangfigurecaption=false,%
+hangsection=true,%
+hangsubsection=true,%
+colorize=full,%
+colortheme=bluemagenta,%
+bibsys=bibtex,%
+bibfile=ba_cf_bib_ref,%
+bibstyle=alphabetic,%
+bibencoding=utf8,
+]{cleanthesis}
+
+\hypersetup{					% setup the hyperref-package options
+	pdftitle={\thesisTitle},	% 	- title (PDF meta)
+	pdfsubject={\thesisSubject},% 	- subject (PDF meta)
+	pdfauthor={\thesisName},	% 	- author (PDF meta)
+	plainpages=false,			% 	-
+	colorlinks=false,			% 	- colorize links?
+	pdfborder={0 0 0},			% 	-
+	breaklinks=true,			% 	- allow line break inside links
+	bookmarksnumbered=true,		%
+	bookmarksopen=true			%
+}
+
+
+\usepackage{listings}
+\usepackage{color}
+\definecolor{greenOk}{RGB}{196,255,179}
+\definecolor{redErr}{RGB}{255,179,179}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.97,0.97,1.00}
+\definecolor{bluekeywords}{rgb}{0.13,0.13,1}
+\definecolor{redstrings}{rgb}{0.9,0,0}
+
+%------ color in table -------------
+\usepackage{color, colortbl}
+%-----------------------------------
+
+%test
+\lstdefinelanguage{myLang}
+{
+	% list of keywords
+	morekeywords={
+		import,
+		if,
+		while,
+		for,
+		private,
+		public,
+		explicit
+	},
+	sensitive=false, % keywords are not case-sensitive
+	morecomment=[l]{//}, % l is for line comment
+	morecomment=[s]{/*}{*/}, % s is for start and end delimiter
+	morestring=[b]" % defines that strings are enclosed in double quotes
+}
+%testend
+
+\lstdefinestyle{mystyle}{
+%test
+	language=[Sharp]C,
+%testend
+	backgroundcolor=\color{backcolour},   
+	commentstyle=\color{codegreen},
+	keywordstyle=\color{bluekeywords},
+	numberstyle=\tiny\color{codegray},
+	stringstyle=\color{redstrings},
+	basicstyle=\scriptsize,
+	breakatwhitespace=false,         
+	breaklines=true,                 
+	captionpos=b,                    
+	keepspaces=true,                 
+	numbers=left,                    
+	numbersep=5pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=2
+}
+
+\lstset{style=mystyle}
+
+
+
+%------ URL Literaturverzeichnis anpassen ----------------------
+\usepackage{url}
+\setcounter{biburlnumpenalty}{100}
+\setcounter{biburlucpenalty}{100}
+\setcounter{biburllcpenalty}{100}
+%----------------------------------------------------------------
+%--------Abkürzungsverzeichnis-----------
+\usepackage{acronym}
+%-------- Bilder und Deckblatt--------
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{wallpaper}
+\usepackage{rotating}
+%-------------------------------------
+%------- Tabelle- ------------
+\usepackage{tabularx}
+%---------Quellcode--------------------
+%\usepackage{listings}
+
+%% Dokument Beginn %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+	
+	\renewcaptionname{ngerman}{\figurename}{Abb.}
+	\renewcaptionname{ngerman}{\tablename}{Tab.}
+	
+	% --------------------------
+	% Front matter
+	% --------------------------
+	\pagenumbering{roman}			% roman page numbing (invisible for empty page style)
+	\pagestyle{empty}				% no header or footers
+	\input{content/deckblatt}		% INCLUDE: all titlepages
+	\pagestyle{empty}				% no header or footers
+	\input{content/Sperrvermerk}	% include Sperrvermerk
+
+	
+	\cleardoublepage
+	
+	\pagestyle{plain}				% display just page numbers
+	\input{content/Abkuerzungsverzeichnis}		% INCLUDE: the abstracts (english and german)
+	
+	\cleardoublepage
+
+	\cleardoublepage
+	%
+	\setcounter{tocdepth}{2}		% define depth of toc
+	\tableofcontents				% display table of contents
+	\cleardoublepage
+	
+	% --------------------------
+	% Body matter
+	% --------------------------
+	\pagenumbering{arabic}			% arabic page numbering
+	\setcounter{page}{1}			% set page counter
+	\pagestyle{maincontentstyle} 	% fancy header and footer
+	\input{content/Einleitung}
+	\input{content/Grundlagen}
+	\input{content/Analyse}
+	\input{content/Realisierung}
+	\input{content/Test}
+	\input{content/Zusammenfassung}
+	\cleardoublepage
+	
+	% --------------------------
+	% Back matter
+	% --------------------------
+	{
+		\setstretch{1.1}
+		\renewcommand{\bibfont}{\normalfont\small}
+		\setlength{\biblabelsep}{0pt}
+		\setlength{\bibitemsep}{0.5\baselineskip plus 0.5\baselineskip}
+		\printbibliography[nottype=online]
+		\printbibliography[heading=subbibliography,title={Webseiten},type=online,prefixnumbers={@}]
+	}
+	\cleardoublepage
+	
+	\listoffigures
+
+	\cleardoublepage
+	
+	\clearpage
+	\newpage
+	\mbox{}
+	
+	% **************************************************
+	% End of Document CONTENT
+	% **************************************************
+	\begin{appendix}
+		\input{content/Anhang}
+	\end{appendix}
+		
+	\input{content/Eidesstattliche_Erklaerung}
+
+	%% Dokument ENDE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\end{document}
+

@@ -1,0 +1,540 @@
+\chapter{Control}
+\section{Einführung}
+Im Rahmen der Laborveranstaltung Systemvertigung soll ein Kontrollblock mit einem integriertem Filter entwickelt werden. Dabei müssen die Signalverknüpfungen zwischen ADC (Analog-Digital-Converter) und DAC (Digital-Analog-Converter) berücksichtigt und erzeugt werden, sowie eine Kommunikation mit dem SPI-Bus zur Manipulation der digital gewandelten Daten erfolgen.
+
+\section{Spartan 3AN}
+Für die Umsetzung des Projektes steht ein Spartan 3AN Developement Board und die Entwicklungsumgebung ISE von Xilinx zur Verfügung.
+Die technischen Eigenschaften und verfügbaren Funktionalitäten sind dem Handbuch \textit{Spartan\_3A\_UserGuide\_(ug334)} zu entnehmen.
+
+\section{Control implementierung}
+Einzelne Elemente werden mit m\_NAME benannt. m\_ steht für Modul. Eine Ausnahme bildet hier der FIR Filter, welcher Aufgrund seiner zu erwartenden Latenz nicht garantiert auf jede FPGA Hardware portiert werden kann und wir dies somit kenntlich machen wollten.  
+
+
+
+\section{Blockschaltbild detalliert}
+
+\subsection{Blockschaltbild m\_flowcontrol}
+Das Modul m\_flowcontrol verwaltet die interne Verknüpfungen zwischen den einzelnen Blöcken wie z.B. ADC und DAC.
+Der Multiplexer steuert die Kommunikation auf dem SPI-Bus, dieser wird sowohl vom ADC und DAC genutzt.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{images/control1}
+	\caption{Blockschaltbild}
+	\label{fig:control1}
+\end{figure}
+
+\begin{table}[H]
+	\centering
+	\captionabove{m\_flowcontrol}
+	\begin{tabular}{|l|c|r|}
+		\hline
+		\rowcolor{green}Parameter & Value & Type  \\
+		\hline
+		switch & STD\_LOGIC\_VECTOR (3 downto 0) & in\\
+		\hline
+		button & STD\_LOGIC\_VECTOR (3 downto 0) & in\\
+		\hline
+		clk & STD\_LOGIC & in\\
+		\hline
+		reset\_in & STD\_LOGIC & in\\
+		\hline
+		amp\_in & STD\_LOGIC & in\\
+		\hline
+		ad\_in & STD\_LOGIC & in\\
+		\hline
+		spi\_sck\_out & STD\_LOGIC & out\\
+		\hline
+		spi\_mosi\_out & STD\_LOGIC & out\\
+		\hline
+		amp\_cs\_out & STD\_LOGIC & out\\
+		\hline	
+		dac\_cs\_out & STD\_LOGIC & out\\
+		\hline		
+		ad\_conv\_out & STD\_LOGIC & out\\
+		\hline
+		led\_out & STD\_LOGIC\_VECTOR (7 downto 0) & out\\
+		\hline
+	\end{tabular}
+\end{table}
+
+\noindent Control-Element besteht aus mehreren kleineren Blöcke, welche je eine bestimmte Aufgabe erfüllen (siehe Abbildung \ref{fig:control2} ). 
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\linewidth]{images/control2}
+\caption{Blockschaltbild detailliert}
+\label{fig:control2}
+\end{figure}
+
+
+\subsection{Modul m\_deb}
+Modul m\_deb entprellt die Taster und die Switches, so dass definierte Daten anliegen und keine undefinierte Zustände erzeugt werden (siehe Abbildung \ref{fig:m_deb}).
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.5\linewidth]{images/m_deb}
+\caption{m\_deb}
+\label{fig:m_deb}
+\end{figure}
+
+\begin{table}[H]
+	\centering
+	\captionabove{m\_deb}
+	\begin{tabular}{|l|c|r|r|}
+		\hline
+		\rowcolor{green}Parameter & Value & Type & INIT\\
+		\hline
+		clk & STD\_LOGIC & in & clk\\
+		\hline
+		reset & STD\_LOGIC & in & 1\\
+		\hline
+		taste & STD\_LOGIC & in & 0\\
+		\hline
+		enable\_in & STD\_LOGIC & out & 0\\
+
+		\hline
+	\end{tabular}
+\end{table}
+
+\subsection{Modul m\_sync\_reset}
+Das Modul liefert einen synchronisiertes Reset (siehe Abbildung \ref{fig:m_synres}).
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.5\linewidth]{images/m_synres}
+\caption{m\_sync\_reset}
+\label{fig:m_synres}
+\end{figure}
+
+\begin{table}[h]
+	\centering
+	\captionabove{m\_sync\_reset}
+	\begin{tabular}{|l|c|r|r|}
+		\hline
+		\rowcolor{green}Parameter & Value & Type & INIT\\
+		\hline
+		clk & STD\_LOGIC & in &clk\\
+		\hline
+		reset\_in & STD\_LOGIC & in & 1\\
+		\hline
+		reset\_out & STD\_LOGIC & out & 1 \\
+		\hline
+		inv\_reset\_out\_in & STD\_LOGIC & out & 0\\
+		
+		\hline
+	\end{tabular}
+\end{table}
+
+\subsection{Modul m\_mux2}
+Modul m\_mux2 entschiedet ob ADC und DAC auf den SPI-Bus zugreifen.  (siehe Abbildung \ref{fig:m_muxPNG}).
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.4\linewidth]{images/m_muxPNG}
+\caption{m\_mux2}
+\label{fig:m_muxPNG}
+\end{figure}
+
+\begin{table}[H]
+	\centering
+	\captionabove{m\_mux2}
+	\begin{tabular}{|l|c|r|r|}
+		\hline
+		\rowcolor{green}Parameter & Value & Type & INIT\\
+		\hline
+		spi\_mosi\_dac\_in & STD\_LOGIC & in & 1\\
+		\hline
+		spi\_mosi\_adc\_in & STD\_LOGIC & in & 0\\
+		\hline
+		spi\_sck\_dac\_in & STD\_LOGIC & in& 0\\
+		\hline
+		spi\_sck\_adc\_in & STD\_LOGIC & in& 0\\
+		\hline
+		select\_dac\_in & STD\_LOGIC & in& 1\\
+		\hline
+		ad\_conv\_in & STD\_LOGIC & in& 0\\
+		\hline
+		amp\_cs\_in & STD\_LOGIC & in& 0\\
+		\hline
+		dac\_cs\_in & STD\_LOGIC & in& 0\\
+		\hline
+		reset & STD\_LOGIC & in& 1\\
+		\hline
+		clk & STD\_LOGIC & in & clk\\
+		\hline
+		ad\_conv\_out & STD\_LOGIC & out & 0\\
+		\hline
+		amp\_cs\_out & STD\_LOGIC & out & 0\\
+		\hline
+		dac\_cs\_out & STD\_LOGIC & out & 0\\
+		\hline
+		spi\_mosi\_out & STD\_LOGIC & out & 0\\
+		\hline
+		spi\_sck\_out & STD\_LOGIC & out & 0\\
+		\hline
+	\end{tabular}
+\end{table}
+
+\subsection{Modul fir\_sprachband} \label{sprachband}
+FIR Filter Grundlagen sind unter \url {http://users.etech.haw-hamburg.de/users/Schwarz/En/Lecture/Dyj/Notes/Chap4.pdf} und \url {http://lipas.uwasa.fi/~TAU/AUTO3210/Slides/Ralf.pdf} nachzulesen. \\
+Es wird die transponierte Form eines FIR Filters 20. Ordnung der nach 450 ns bei 50MHz Systemtakt das erste Ergebnis liefert (\ref{fig:fir_sprachband}) als Grundlage genutzt. 
+
+Der FIR Filter bekommt am Eingang 14 Bit vorzeichenbehaftete Daten, bei dem größten Koeffizienten von 90 benötigt man \begin{math}
+2^{14}=   16384 * 90 
+\end{math}
+= 1474560 => 21 Bit Maximallänge des Zwischenergebnisses\\
+\begin{math}
+2^{20} =	1048576\\
+2^{21} =	2097152
+\end{math}
+
+
+Das Ergebnis der Berechnungskette wird pro Takt um eine Ordnung höher geschoben, bis das Ergebnis nach 450 ns in Tap(0) liegt. Dieses wird auf 14 Bit gekürzt (13 Bit + Vorzeichen) somit bedeutet es 8 Bit Shiften.
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\linewidth]{images/fir_sprachband}
+\caption{fir\_sprachband}
+\label{fig:fir_sprachband}
+\end{figure}
+
+
+\begin{table}[H]
+	\centering
+	\captionabove{fir\_sprachband}
+	\begin{tabular}{|l|c|r|r|}
+		\hline
+		\rowcolor{green}Parameter & Value & Type & INIT\\
+		\hline
+		clk & STD\_LOGIC & in & clk\\
+		\hline
+		sig\_in & STD\_LOGIC\_VECTOR(13 downto 0) & in & 00 0000 0000 0000\\
+		\hline
+		sig\_out  & STD\_LOGIC\_VECTOR(13 downto 0) & out & 00 0000 0000 0000\\
+		\hline
+	\end{tabular}
+\end{table}
+
+\section{Zustandsautomat}
+Die Hauptkommunikation mit den beiden anderen Gruppenblöcken läuft durch den SPI-Bus, der ADC schiebt dort das digitale 14 bit Signal rein, fir\_sprachband holt es ab, nimmt das höchste bit (Vorzeichen), schmeißt die zwei folgenden höchsten bits weg und schrumpfen es somit auf 12 bit vorzeichenbehaftet, die dann wieder auf den SPI-Bus gelegt werden.
+
+Signal busy\_in vom ADC signalisiert dass die Daten fertig auf dem SPI-Bus liegen und weiter verarbeitet werden dürfen.
+
+C steht für Condition und ist eine äußere große Statemachine, eine weitere wird genutzt für die menu/mode Auswahl im C0 state.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\linewidth]{images/Zustandsautomat}
+\caption{Zustandsautomat}
+\label{fig:Zustandsautomat}
+\end{figure}
+
+
+\textbf{C0}- Idle/init : state ist das Menu m0-m5 mit den entsprechenden Einstellungsmöglichkeiten (Datenmanipulationen und LED-Ausgaben)
+
+\textbf{C1}- Wait AMP : wartet auf busy\_in vom ADC und wechselt den state auf C2
+
+\textbf{C2}- Read Ch : liest die Daten vom SPI-Bus und extrahiert die benötigten Daten des gewählten channels
+
+\textbf{C3}- Wait Ch : bearbeitet die Daten und schreibt sie wieder zurück auf den SPI-Bus, wechselt wieder in C2 bei busy\_in.\\
+
+Mit enable\_in wird dem ADC signalisiert dass die Operation des sampelns gestartet werden darf.
+Wenn die Datenverarbeitung fertig ist und unsere modifizierten Werte (oder keine modifikation) auf den SPI-Bus geschoben sind,  wird dem DAC signalisiert dass er die Daten abholen und wandeln darf.
+
+\section{Hauptmenü}
+
+\begin{table}[H]
+	\centering
+	\captionabove{Ausgabe Hauptmenü}
+	\begin{tabular}{|l|r|}
+		\hline
+		\ [{\color{red} x}{\color{blue}|x|x|x} &{\color{orange} x|x|x|x}]	\\
+		\hline
+		LED 7..4 & LED 3..0\\
+		\hline
+	\end{tabular}
+\end{table}
+
+\begin{table}[H]
+	\centering
+	\captionabove{Eingabe Hauptmenü}
+	\begin{tabular}{|l|}
+		\hline
+		\ [s0] [b3] [b2] [b1] [b0]	\\
+		\hline
+		sw 0 btn 3    …    btn 0\\
+		\hline
+	\end{tabular}
+\end{table}
+
+{\color{red} 1 bit op}\\
+{\color{blue}3 bit menu mode}\\
+{\color{orange}4 bit specified operation in given mode}\\
+\textbf{Rot}:	
+\begin{table}[H]
+	\centering
+	\captionabove{Ausgabe Rot}
+	\begin{tabular}{|l|r|}
+		\hline
+		\ [{\color{red} 1}{\color{blue}|x|x|x} &{\color{orange} x|x|x|x}]	\\
+		\hline
+	\end{tabular}
+\end{table}
+\noindent {\color{red}LED(7) Signalisiert den Sampling Betriebsmodi}\\
+\noindent LED(7) leuchtet = Wandlung des analogen Signals am Eingang mittels ADC wird durchgeführt.\\
+\textbf{Blau:}
+\begin{table}[H]
+	\centering
+	\captionabove{Ausgabe Blau}
+	\begin{tabular}{|l|r|}
+		\hline
+		\ [{\color{red} 0}{\color{blue}|y|y|y} &{\color{orange} x|x|x|x}]	\\
+		\hline
+	\end{tabular}
+\end{table}
+\noindent {\color{blue}LED(6-4): Mode Auswahl}\\
+000 - Sampling\\
+001 - Channel Select\\
+010 - Value Shift\\
+011 - Multiply\\
+100 - Filter\\
+101 - "Signal Generator" -> dummy\\
+111 - Mode Error\\
+\newpage
+\subsection{Operationsbeschreibung der Mode Auswahl:}
+
+[{\color{red} 0}{\color{blue}|y|y|y} {\color{orange} x|x|x|x}]	\\
+Solang der Automat im Zustand „wait\_idle“ (Condition 0) verweilt, kann durch Drücken des Button(0) im Menü navigiert und Einstellungen am System, wie nachfolgend erläutert, vorgenommen werden. Mode: (0-5).\\
+
+\noindent \textbf{Mode 0 - Sampling:}\\
+{\color{red} y}{\color{blue}|0|0|0} {\color{orange} 0|0|0|0} \\
+{\color{red} 1}{\color{blue}|0|0|0} {\color{orange} 0|0|0|0}- Sampling \\
+Button(3) in Kombination mit Switch(0) startet bzw. stoppt das Sampling. Wird Button(3) erneut betätigt toggled der Zustand. Wird Switch(0) ausgeschaltet „0“, so findet kein Sampling mehr statt.
+Voreingestellt: Kanal 0, Value Shift 0, Filter aus, Multiplikation *1.\\
+{\color{red} 0}{\color{blue}|0|0|0} {\color{orange} 0|0|0|0} - kein Sampling\\
+
+\noindent \textbf{Mode 1 - Channel Select:}\\
+{\color{red} 0}{\color{blue}|0|0|1} {\color{orange} 0|0|0|1} - Kanal 0 (ch0)\\
+Voreingestellt: Kanal 0 wird aus dem SPI Bussignal abgeholt.
+Button(1) wählt Kanal 0 aus.\\
+{\color{red} 0}{\color{blue}|0|0|1} {\color{orange} 0|1|0|0} - Kanal 1 (ch1)\\
+Button(2) wählt Kanal 1 aus.\\
+{\color{red} y}{\color{blue}|0|0|1} {\color{orange} 0|x|0|x} \\
+Button(3) toggled Sampling (Verhalten wie in Mode 0 beschrieben).
+Voreingestellt: Kanal 0, Value Shift 0, Filter aus, Multiplikation *1.\\
+
+\noindent \textbf{Mode 2 – Value Shift:}\\
+{\color{red} 0}{\color{blue}|0|1|0} {\color{orange} y|y|y|y} 
+\\ 
+{\color{red} 0}{\color{blue}|0|1|0} {\color{orange} 0|1|0|0} - um 0 nach rechts\\
+{\color{red} 0}{\color{blue}|0|1|0} {\color{orange} 0|1|0|1} - um 1 nach rechts\\
+{\color{red} 0}{\color{blue}|0|1|0} {\color{orange} 0|1|1|0} - um 2 nach rechts\\
+{\color{red} 0}{\color{blue}|0|1|0} {\color{orange} 0|1|1|1} - um 3 nach rechts\\
+
+\noindent Button(1) ändert die Größe der Rechtsverschiebung des 14-Bit Digitalsignals. Einstellen durch mehrfaches Drücken der Taste.
+Kombinierbar mit Multiplikation (Mode 3).\\
+
+\noindent {\color{red} 0}{\color{blue}|0|1|0} {\color{orange} 1|0|0|0} - um 0 nach links\\
+{\color{red} 0}{\color{blue}|0|1|0} {\color{orange} 1|0|0|1} - um 1 nach links\\
+{\color{red} 0}{\color{blue}|0|1|0} {\color{orange} 1|0|1|0} - um 2 nach links\\
+{\color{red} 0}{\color{blue}|0|1|0} {\color{orange} 1|0|1|1} - um 3 nach links\\
+
+\noindent Button(2) verhalten wie Button(1) jedoch mit Linksverschiebung.\\
+
+\noindent {\color{red} 0}{\color{blue}|0|1|0} {\color{orange} 0|0|0|0} - reset shift "0"\\
+
+\noindent Button(3) zurücksetzen / keine Verschiebung.\\
+Äquivalent zu - {\color{red} 0}{\color{blue}|0|1|0} {\color{orange} 0|1|0|0} und 
+{\color{red} 0}{\color{blue}|0|1|0} {\color{orange} 1|0|0|0}\\
+
+\textbf{Mode 3 – Multiply:}\\
+{\color{red} 0}{\color{blue}|0|1|1} {\color{orange}y|y|y|y}\\
+{\color{red} 0}{\color{blue}|0|1|1} {\color{orange}0|0|0|1} - mit 1 Multiplizieren \\
+{\color{red} 0}{\color{blue}|0|1|1} {\color{orange}0|0|1|0} - mit 2 Multiplizieren \\
+{\color{red} 0}{\color{blue}|0|1|1} {\color{orange}0|0|1|1} - mit 3 Multiplizieren \\
+{\color{red} 0}{\color{blue}|0|1|1} {\color{orange}0|1|0|0} - mit 4 Multiplizieren \\
+{\color{red} 0}{\color{blue}|0|1|1} {\color{orange}0|1|0|1} - mit 5 Multiplizieren \\
+{\color{red} 0}{\color{blue}|0|1|1} {\color{orange}0|1|1|0} - mit 6 Multiplizieren \\
+{\color{red} 0}{\color{blue}|0|1|1} {\color{orange}0|1|1|1} - mit 7 Multiplizieren \\
+
+\noindent {\color{red} 0}{\color{blue}|0|1|1} {\color{orange}1|0|0|1} - mit -1 Multiplizieren \\
+{\color{red} 0}{\color{blue}|0|1|1} {\color{orange}1|0|1|0} - mit -2 Multiplizieren \\
+{\color{red} 0}{\color{blue}|0|1|1} {\color{orange}1|0|1|1} - mit -3 Multiplizieren \\
+{\color{red} 0}{\color{blue}|0|1|1} {\color{orange}1|1|0|0} - mit -4 Multiplizieren \\
+{\color{red} 0}{\color{blue}|0|1|1} {\color{orange}1|1|0|1} - mit -5 Multiplizieren \\
+{\color{red} 0}{\color{blue}|0|1|1} {\color{orange}1|1|1|0} - mit -6 Multiplizieren \\
+{\color{red} 0}{\color{blue}|0|1|1} {\color{orange}1|1|1|1} - mit -7 Multiplizieren \\
+
+\noindent Button(1) Multiplikation wird hochgezählt wie abgebildet.
+
+\noindent Button(2) Multiplikation wird heruntergezählt.
+(invertierte Button(1) Funktionalität).
+
+\noindent {\color{red} 0}{\color{blue}|0|1|1} {\color{orange}0|0|0|1} \\
+\noindent Button(3) zurücksetzen auf Multiplikation *1.
+
+\noindent {\color{red} 0}{\color{blue}|0|1|1} {\color{orange}0|0|0|0} und {\color{red} 0}{\color{blue}|0|1|1} {\color{orange}1|0|0|0} \\
+Voreingestellt: Zustand wird übersprungen und auf 1 bzw. -1 gezählt.\\
+
+\noindent \textbf{Mode 4 – Filter:}\\
+{\color{red} 0}{\color{blue}|1|0|0} {\color{orange}y|y|y|y} \\
+{\color{red} 0}{\color{blue}|1|0|0} {\color{orange}0|0|0|0} - Filter deaktiviert
+Button(3) schaltet den FIR-Filter ein bzw. aus \\
+{\color{red} 0}{\color{blue}|1|0|0} {\color{orange}1|1|1|1} - Filter aktiv\\
+
+\noindent \textbf{Mode 5 – Signal Generator:}\\
+{\color{red} 0}{\color{blue}|1|0|1} {\color{orange}x|x|x|x} \\
+{\color{red} 0}{\color{blue}|1|0|1} {\color{orange}0|0|0|0} - dummy value
+Funktion wird nicht Implementiert, jedoch als Dummy im Code bereits vorgesehen.\\
+
+\noindent \textbf{Mode y – Error Mode/Condition:}\\
+{\color{red} 0}{\color{blue}|1|1|1} {\color{orange}1|1|1|1} -Anzeige von Fehlern jeglicher Art. \\
+
+\paragraph{Legende:}
+y – durch beschriebene Nutzereingabe umschaltbar
+x – durch vorausgegangene Nutzereingabe bestimmt
+
+\newpage
+\subsection{Beispiel: Starten des Sampling Vorganges mit Vorgabewerten}
+
+\textbf{Bedingung:}
+ 
+\noindent Condition 0 \&	Zustand: wait\_idle\\
+
+\noindent Mode 0 \& 		Hauptmenu Modus - Sampling\\
+
+\noindent Switch(0) = 1 \&	Switch(0) aktiviert (bestätigt die über Switch(3-1) eingestellte Vorverstärkung des ADC-PreAmps).\\
+
+\noindent Button(3) = "rising edge"	wenn Button(3) gedrückt wird und vorher nicht betätigt war, und nicht mit anderen Buttons zusammen gedrückt wird.\\
+
+\noindent \textbf{Ergebnis:}\\
+
+\noindent {\color{red} 1}{\color{blue}|0|0|0} {\color{orange}0|0|0|0} LED Anzeige: Signal Sampling gestartet. \\
+
+Enable\_in = 1	Freigabesignal an den ADC zum Einlesen des analogen Signals und beginn der Wandlung. Wird verwendet um das rechtzeitige Abholen der Signalbits am SPI-Bus zu realisieren.\\
+
+\noindent Beschreibung: \\
+Der ADC startet das Sampling des Signals und schiebt dieses auf den SPI-Bus. Zusätzlich gibt das ADC Modul einen Bitvektor mit den Werten der beiden Kanäle an unser Steuerungsmodul. Gemäß den getätigten  Einstellungen im Hauptmenü werden diese Werte im Steuerungsmodul verarbeitet. Der so entstandene Bitvektor wird abschließend an das DAC-Modul weitergereicht. Die ADC \& DAC Module verwenden für die Datenübertragung an die Wandler-Hardware den SPI-Bus. Die Steuerung des Zugriffs auf den SPI-Bus erfolgt über das Muxer Modul und wird mit dem Signal select\_dac\_in auf DAC oder ADC Betrieb gestellt.
+Der DAC wird vom Steuerungsmodul über das Signal ctrl\_busy\_in gezielt in Betrieb genommen, wenn die vorher aufbereiteten Daten bereit liegen.
+\section{Implementierung und Test}
+\subsection{Debouncer}
+Die Tastenentprellung wird in der Simulation bei einem Tastendruck über eine Zeitspanne von 180 ns aktiv.
+Dargestellt zwischen 430 und 610 ns. Nach 9 Takten wird die gedrückte Taste als solche "erkannt".
+Das Schieberegister abtast\_vector, hat 3x zur steigenden Taktflanke des teiler Zählers an Zählwert <1>
+einen Tastendruck detektiert abtast\_vector = "111". Somit wird um 1 Takt verspätet das enable Signal auf 1 gesetzt.
+Es verweilt in diesem Zustand bis abtast\_vector wieder den Wert "000" erreicht hat. Mit einem Takt Verspätung wird 
+das enable Signal wieder auf 0 gesetzt. Eine Signaländerung liegt an abtast\_vector somit alle 80 ns an.
+Dies ergibt 3x80ns = 240ns Signallänge des enable Signales, selbst wenn die Taste nur 180ns betätigt wurde.
+Diese Werte werden durch Anpassung der Teilerverhältnisse beim Fitting auf 5ms Tastendruckdauer angehoben.
+Ein kurzer "Prellimpuls" zum richtigen Zeitpunkt, in der Simulation nach 110ns sorgt bereits für die 1. "001" in abtast\_vector.
+Dieser führt jedoch nicht zum aktivieren des enable Signales, da hierzu wie bereits erwähnt der Wert "111" anliegen muss.
+Somit ist für eine hinreichende Entprellung gesorgt.
+
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1\linewidth]{images/debouncer}
+		\caption{debouncer testbench}
+		\label{fig:debouncer}
+	\end{figure}
+Mit eingehendem Reset und steigender Taktflanke werden die Signale abtast\_vector auf 000 und enable mit 0 und teiler mit 00 initialisiert.
+Liegt das Signal taste zusammen mit dem Zähler-Signal teiler mit Wert 01 an, so wird der letzte Wert abtast\_vector[0] um 1 nach links, also in abtast\_vector[1] geschoben.
+Das aktuelle taste Signal wird in abtast\_vector[0] abgelegt.
+Liegt das taste Signal über eine Dauer von 3x Teiler Wert 01 (im Testbench hier somit über 9 Systemtakte) an, wird der Tastendruck als solcher detektiert und auf das Ausgangssignal enable gelegt.
+Der Tastendruck wird somit auf eine konstante Mindestlänge von 240ns angepasst. Für den Produktiveinsatz sind die Teilerverhältnisse noch entsprechend auf 5 ms Tastendruckzeit anzupassen.
+
+\begin{figure}[H]
+\centering
+\includegraphics[angle=90,width=1\linewidth]{images/debouncer_block}
+\caption{debouncer\_blockschaltbild}
+\label{fig:debouncer_block}
+\end{figure}
+
+
+
+
+\subsection{Multiplexer}
+Die Signale ad\_conv\_in, amp\_cs\_in, dac\_cs\_in werden durch die Flip-Flops bei steigender Flanke übernommen.
+Die Signale spi\_mosi\_dac\_in und spi\_sck\_dac\_in werden bei einem Flankenwechsel erfasst, und bei der nächsten steigenden Flanke durchgeschaltet. Die Auswahl ob dac oder adc auf den SPI-Bus zugreifen dürfen erfolgt über select\_dac\_in. Hat dieses Signal den Wert 0 so darf der DAC zugreifen, ist das Signal auf 1 ist der ADC zugriffsberechtigt.
+In dieser Simulation sind Abweichungen im Signalspiel (Durchschalt Verzögerungen) zu den ad\_conv\_in, amp\_cs\_in, dac\_cs\_in Signalen ersichtlich. Diese treten durch die Muxerkomponente im Bereich 1/2 bis 1 Takt für den SPI clk und das mosi Signal auf.
+Zur Kompensation wäre eine Veränderung des Layouts durch einbringen weiterer Verzögerungselemente oder eine Veränderung im Verhalten des Signals mit seinem Durchschaltzeitpunkt zu überdenken. In der Gesamtsimulation des Projektes kann diese Problematik genauer in seiner Auswirkung analysiert und besser eingeschätzt werden, ob hier Veränderungen notwendig werden.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.6\linewidth]{images/muxer_block}
+\caption{Multiplexer Blockschaltbild}
+\label{fig:muxer_block}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\linewidth]{images/muxer_tb_part1}
+\caption{muxer\_tb\_part1}
+\label{fig:muxer_tb_part1}
+\end{figure}
+
+Das Reset Signal wird mit steigender Taktflanke übernommen und sorgt für die Initialisierung der Ausgangssignale ad\_conv\_out, amp\_cs\_out und dac\_cs\_out mit 0.
+Vor dem Reset befinden sich die Ausgänge noch in undefiniertem Zustand.
+Das jeweilige Eingangssignal, beispielsweise amp\_cs\_in wird mit steigender Taktflanke direkt auf das Ausgangssignal amp\_cs\_out durchgeschaltet (Abbildung \ref{fig:muxer_tb_part1}).
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\linewidth]{images/muxer_tb_dac_part2}
+\caption{muxer\_tb\_dac\_part2}
+\label{fig:muxer_tb_dac_part2}
+\end{figure}
+Wenn das Eingangssignal select\_dac\_in auf 0 liegt wird der DAC berechtigt, den Muxer zu verwenden um auf den SPI-Bus zuzugreifen.
+Das anliegende spi\_sck\_dac\_in Signal wird mit fallender Taktflanke abgenommen und mit der nachfolgenden steigenden Taktflanke auf das Ausgangssignal spi\_sck\_out durchgeschaltet.
+Dies erfolgt somit um 1/2 Takt zeitversetzt.
+Bei anliegendem spi\_sck\_dac\_in Signal wird das Eingangssignal spi\_mosi\_dac\_in bei fallender Taktflanke übernommen und somit zeitgleich mit dem spi\_sck\_out zur steigenden Taktflanke auf das Ausgangssignal spi\_mosi\_out durchgereicht (Abbildung \ref{fig:muxer_tb_dac_part2}).
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\linewidth]{images/muxer_tb_adc_part3}
+\caption{muxer\_tb\_adc\_part3}
+\label{fig:muxer_tb_adc_part3}
+\end{figure}
+
+Ist das Signal select\_dac\_in auf 1, so wird der ADC berechtigt über den Muxer auf den SPI-Bus zuzugreifen.
+Das signalspiel ist hierbei equivalent zu dem zuvor beschriebenem DAC jedoch werden hier die Signale spi\_sck\_adc\_in statt spi\_sck\_dac\_in und das Signal spi\_mosi\_adc\_in statt spi\_mosi\_dac\_in verwendet.
+Liegt zu einem beliebigen Zeitpunkt hier nach 400ns das reset Signal an, so werden die Ausgänge spi\_sck\_out und spi\_mosi\_out auf 0 gezogen.
+
+
+\subsection{Sync\_reset}
+Das anliegende reset\_in Signal wird bei fallender Flanke des clk um einen Takt verzögert auf den Ausgang reset\_out geschaltet.
+Der erste Takt 0-20ns ist undefiniert, da hier die beiden nachgeschalteten Flip-Flops noch kein Signal vom vorhergehenden Flip-Flop übernehmen können. Die resultierende Signalbreite reset\_out entspricht der von reset\_in, selbst wenn das Signal mit steigender Taktflanke aufhört, wie im markierten Bereich.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\linewidth]{images/sync_reset_block}
+\caption{Synchrones reset Blockschaltbild}
+\label{fig:sync_reset_block}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\linewidth]{images/sync_reset_tb}
+\caption{Synch Reset tb}
+\label{fig:sync_reset_tb}
+\end{figure}
+
+Mit der ersten fallenden Taktflanke nach dem Einschalten wird das sync\_reset Modul mit den Ausgangssignalen reset\_out = 0 und inv\_reset\_out = 1 initialisiert.
+Das sync\_reset Modul übernimmt mit der nächsten fallenden Taktflanke das Eingangssignal reset\_in und schaltet dieses mit der nächsten steigenden Flanke auf das Ausgangssignal reset\_out durch.
+Der inv\_reset\_out bildet das invertierte Signal des reset\_out ab.
+
+\subsection{fir\_sprachband}
+
+Funktion des Filters ist ausführlich in der Kapitel  \ref{sprachband}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[angle=90,width=0.7\linewidth]{images/tb_fir_sprachband}
+\caption{Testbench fir\_sprachband}
+\label{fig:tb_fir_sprachband}
+\end{figure}
+
+
+
+

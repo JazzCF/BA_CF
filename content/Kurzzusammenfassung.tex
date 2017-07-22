@@ -1,0 +1,13 @@
+\chapter{Einleitung}
+
+
+
+	\vspace{20mm}	
+	
+	
+	Die vorliegende Arbeit beschreibt die Entwicklung einer plattformunabhängigen Qt-Bibliothek als Schnittstelle zu SAP R/3. Die Swissbit AG produziert und testet wöchentlich tausende von Speichermedien. Dazu werden selbst entwickelte Testgeräte eingesetzt. Die Produktpalette ist sehr umfangreich und reicht von (micro-)SD Karten bis zu SSD Festplatten. Je nach Produkt und Testszenario wird eine unterschiedlich große Menge an Informationen in der FlashDB-Datenbank, Namens sbdesql01, persistent gespeichert und kann in Problemfällen als Nachweis verwendet werden. Damit die Inkonsistenzen der Einträge von Daten in der SAP-Datenbank und der Testdaten in der FlashDB-Datenbank rechtzeitig entdeckt werden und/oder um falsche Einträge in der FlashDB-Datenbank durch das Personal zu vermeiden, soll ein Konzept und eine Software für den lesenden Zugriff auf die SAP-Datenbank ausgearbeitet werden. Die Software soll in der Lage sein, Datensätze von beiden Datenbanken auszulesen und die Ergebnisse miteinander zu vergleichen. \\
+	Die Kommunikation findet zwischen zwei räumlich getrennten Systemen über TCP/IP statt. Auf der Server-Seite soll lesend über RFC auf die SAP-Datenbank in Form einer .NET-Anwendung zugegriffen werden. Auf der Client-Seite soll eine Qt-Anwendung mit Einbindung der zu entwickelnden \textit{SAPLib} und der bereits vorhandenen \textit{FlashDBLib} entwickelt werden. Die Qt-Anwendung vergleicht die Ergebnisse von beiden Datenbanken miteinander und signalisiert, wenn diese nicht übereinstimmen. Das Ziel ist eine funktionierende Qt-Anwendung unter Nutzung von beider Bibliotheken, die anhand bekannter Werte dazugehörige Datensätze von beiden Datenbanken ausliest und miteinander vergleicht.
+	
+	
+	
+	Kapitel zwei beschäftigt sich mit den grundlegenden Funktionalitäten verschiedener Teilkomponenten. Dabei wird auf die Grundlagen von SAP, .NET-Framework sowie des  Qt-Frameworkes genauer eingegangen. Kapitel drei beschäftigt sich mit der Analyse der Aufgabenstellung. Es werden der aktuelle Stand im Unternehmen, Schwachstellen und unterschiedliche Lösungsansätze analysiert und abschließend eine mögliche Lösung ausgewählt. Kapitel vier beinhaltet Muss-, Wunsch- und Abgrenzungskriterien. Es wird auch der Entwurf einzelner Komponenten sowie den Gesamtentwurf der Anwendung beschrieben. Kapitel fünf beschreibt Implementierungsdetails sowie spezielle Konfigurationseinstellungen in den einzelnen Projekten. Kapitel sechs beinhaltet Tests der einzelnen Komponenten sowie den Gesamttest der Anwendung. Im Kapitel sieben werden abschließend der erreichte Stand und die Möglichkeiten der Weiterentwicklung diskutiert sowie einige Hinweise gegeben.

@@ -1,0 +1,70 @@
+This is BibTeX, Version 0.99d (TeX Live 2016/Debian)
+Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
+The top-level auxiliary file: BA_CF.aux
+The style file: biblatex.bst
+Reallocated glb_str_ptr (elt_size=4) to 20 items from 10.
+Reallocated global_strs (elt_size=20001) to 20 items from 10.
+Reallocated glb_str_end (elt_size=4) to 20 items from 10.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Database file #1: BA_CF-blx.bib
+Database file #2: ba_cf_bib_ref.bib
+Warning--I didn't find a database entry for "SwissbitAbout"
+Warning--I didn't find a database entry for "S.219"
+Warning--I didn't find a database entry for "S.840"
+Warning--I didn't find a database entry for "S.769/S.770"
+Warning--I didn't find a database entry for "S.771"
+Biblatex version: 3.3
+Reallocated wiz_functions (elt_size=4) to 9000 items from 6000.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+You've used 15 entries,
+            6256 wiz_defined-function locations,
+            1260 strings with 10075 characters,
+and the built_in function-call counts, 55259 in all, are:
+= -- 2434
+> -- 1977
+< -- 640
++ -- 1191
+- -- 904
+* -- 3573
+:= -- 4305
+add.period$ -- 0
+call.type$ -- 15
+change.case$ -- 267
+chr.to.int$ -- 146
+cite$ -- 30
+duplicate$ -- 6265
+empty$ -- 5679
+format.name$ -- 727
+if$ -- 11689
+int.to.chr$ -- 0
+int.to.str$ -- 75
+missing$ -- 0
+newline$ -- 406
+num.names$ -- 782
+pop$ -- 4578
+preamble$ -- 1
+purify$ -- 262
+quote$ -- 0
+skip$ -- 2567
+stack$ -- 0
+substring$ -- 2649
+swap$ -- 2095
+text.length$ -- 512
+text.prefix$ -- 26
+top$ -- 1
+type$ -- 487
+warning$ -- 0
+while$ -- 584
+width$ -- 0
+write$ -- 392
+(There were 5 warnings)

@@ -1,0 +1,181 @@
+\chapter{Realisierung}
+\section{Randbedingungen}
+
+\subsection{Musskriterien}
+Die zu entwickelnde Bibliothek muss in Qt geschrieben werden, mit dem Ziel, sie in jedes beliebige Qt-Projekt einbinden zu können. Eine Beispielanwendung soll beide Bibliotheken, sowohl FlashDBLib als auch SAPDBLib, einbinden, um die Daten von beiden Datenbanken auslesen zu können. Die Abfrageergebnisse sollen in einer Qt-GUI angezeigt werden und es soll zu erkennbar sein, wenn die Ergebnisse nicht übereinstimmen.\\
+Die Abfrage der SAP-Datenbank erfolgt über \acl{RFC} und soll als eine .NET-Anwendung implementiert werden. Die Ergebnisse sollen in Form einer Server/Client Umgebung zur Verfügung gestellt werden. Es muss sicher gestellt werden, dass eine ausreichende Anzahl an Clients mit dem Server über TCP/IP kommunizieren können. 
+
+Die Server-Anwendung muss in der Lage sein mit der geforderten Anzahl an Clients über TCP/IP zu kommunizieren.
+
+Jede Funktion der SAPDBLib-Bibliothek darf nur einen Wert zurückliefern. \\
+Die Serveranwendung soll beim Start eine Verbindung zur SAP-Datenbank aufbauen, um sofort auf eine Abfrage reagieren zu können.\\
+Die Funktionalität der SAPDBLib soll an einer Beispielanwendung nachgewiesen werden.
+
+\subsection{Wunschkriterien}
+Eine Auswertung möglicher Fehler, sei es in dem Aufbau der SAP-Abfragen oder auf dem D-Bus, ist wünschenswert. Um eine Erweiterungsmöglichkeit von Funktionen der Datenbankabfrage zu ermöglichen, soll eine allgemeine Funktion für die SAP-Serveranwendung entwickelt werden. Weitere Datensätze in der SAP-Datenbank, die gebraucht werden können, sind: Enddatum, Vorgangsnummer, Auftragsart und der Langtext des Auftrags.
+
+\subsection{Abgrenzungskriterien}
+Der \ac{RFC}-Aufruf an die SAP-Datenbank ist ein synchroner Aufruf und wird nicht asynchron implementiert. Eine funktionierende Anwendung ist der kritische Faktor, so dass nicht alle aufgelisteten Abfragen implementiert werden. Der Einsatz der C\#-Serveranwendung ist für die interne Nutzung der Testentwicklung vorgesehen. Er beinhaltet Anmeldedaten, welche nur der Testabteilung zu Verfügung stehen. Eine Neuentwicklung von einem eigenen TCP/IP Protokoll wird nicht durchgeführt, da es genügend fertige Lösungen gibt. Die Abfrageergebnisse werden nicht zwischengespeichert.\\
+Eine Entwicklung eines RFC-Bausteins zum Schreiben in die SAP-Datenbank wird nicht vorgenommen, da es die Arbeit von erfahrenen SAP-Entwicklern ist. \ac{BAPI}s werden für die RFC-Kommunikation nicht eingesetzt. Neue Funktionen für die FlashDBLib werden in dieser Arbeit nicht implementiert.\\
+Eine Analyse der SAP-Tabellen besagt, dass einige Datensätze nur über mehrere SAP-Tabellenabfragen gefunden werden können. Das Herausfinden der richtigen Daten ist aufgrund der fehlenden Berechtigungen nicht immer möglich, deswegen wird das Augenmerk vorerst auf Materialnummer, Materialkurztext, gesamte Auftragsmenge und gesamte Fail-Menge pro Auftrag gesetzt.\\
+Eine Analyse der FlashDBLib besagt, dass nicht alle Funktionen die in der SAPDBLib implementiert werden sollen, auch in FlashDBLib vorhanden sind. Die Entwicklung dieser Funktionen in der FlashDBLib ist nicht Bestandteil dieser Arbeit und wird bei Bedarf außerhalb dieser Arbeit implementiert. Für den Nachweis der richtigen Funktionalität werden die Materialnummer zu einem \ac{PA} sowie der Materialkurztext zu einer Materialnummer von beiden Datenbanken ausgelesen und miteinander verglichen. Eine Erweiterungen der FlashDBLib und der SAPDBLib mit zusätzlichen Funktionen wird außerhalb dieser Arbeit ausgeführt.  
+
+\section{Entwurf der C\#-Anwendung für SAP-Datenbankabfragen} \label{EntwurfC}
+
+\subsection{Funktioneller Entwurf der C\#-Anwendung}
+Der Server (eine C\#-Anwendung) erhält die notwendigen Daten von einer Qt-Applikation und führt mit diesen Daten eine SAP-Datenbankabfrage aus. Er baut eine RFC-Verbindung mit der SAP-Datenbank auf und führt den Funktionsbaustein mit diesen Daten aus. Die Ergebnisse der Abfrage werden an die Qt-Anwendung übermittelt. Die SAP-Datenbankabfragen werden sequentiell ausgeführt.\\
+Zu Testzwecken wird eine Abfrage mit der \ac{PA}-Nummer auf dem SAP-Server durchgeführt. Der Server liefert die Materialnummer, Gesamtmenge und gesamte Fail-Menge von diesem Auftrag zurück. Für die SAPDBLib werden alle Abfragen so aufgebaut, dass es zu jeder Datenbankabfrage immer nur eine Antwort gibt. Es ist allerdings möglich, Abfragen so aufzubauen, dass auch zwei oder mehrere Ergebnisse zurückliefert werden.\\\\
+Die Hauptaufgabe der .NET-Anwendung ist die Kommunikation mit der SAP-Datenbank und die Bereitstellung der Daten für die Clients. Der Datenaustausch mit den Clients (Qt-Applikationen) wird im weiteren Verlauf genauer beschrieben. Hier geht es in erster Linie um die Schnittstelle zwischen SAP-Datenbank und der .NET-Anwendung. Die Anwendung bindet den von SAP bereitgestellten .NET-Connector ein, greift über \ac{RFC} auf die SAP-Datenbank zu und stellt die Ergebnisse der Abfrage zur weiteren Verarbeitung zur Verfügung (siehe Abb. \ref{fig:CSharpDetailentwurf}).
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\linewidth]{images/CSharpDetailentwurf}
+\caption[Entwurf C\#-Anwendung für die SAP-Datenbankabfrage]{Entwurf C\#-Anwendung für die SAP-Datenbankabfrage}
+\label{fig:CSharpDetailentwurf}
+\end{figure}
+Die SAP-Datenbank kommuniziert mit anderen Applikationen u. a. über RFC-Bausteine. Die Entwicklung eines Funktionsbausteines erfordert erheblich mehr Wissen über ABAP-Programmierung, Funktionalitäten der SAP-Datenbank sowie besondere Rechte, welche momentan nicht zur Verfügung stehen. Außerdem soll der neu entwickelte Baustein getestet und durch die SAP-Administrator übernommen werden. Aus diesem Grund wird ein allgemeiner Baustein \textit{RFC\_READ\_TABLE} eingesetzt. Die in Kauf zu nehmende Einschränkung ist dabei, dass nur direkt auf die Tabellen zugegriffen werden kann und dass die Abfragen komplizierter aufgebaut sind, wenn mehrere Einträge über unterschiedliche Tabellen aufgerufen werden. Ein \textbf{schreibender Zugriff} ist über diesen Funktionsbaustein \textbf{nicht möglich}, was für die hier gewünschte Lösung auch nicht notwendig ist.
+\subsection{Klassenentwurf}
+Eine Übersicht der Anwendung ist im Klassendiagramm auf der Abb. \ref{fig:KlassendiagrammToSap} zu sehen.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\linewidth]{images/KlassendiagrammToSap}
+\caption[Klassendiagramm C\#-Testanwendung]{Klassendiagramm C\#-Testanwendung}
+\label{fig:KlassendiagrammToSap}
+\end{figure}
+Die \textit{Program}-Klasse erstellt beide Objekte vom Typ \textit{DestConfig} und \textit{SapQuery}. Die \textit{SapQuery}-Klasse beinhaltet die SAP-Datenbankabfragen. Es ist der Baustein, mit dem später alle Abfragen implementiert werden sollen. Die \textit{DestConfig}-Klasse wird von der Klasse \textit{IDestinationConfiguration} abgeleitet und beinhaltet die Verwaltung der Destinationen. Sie wurde teilweise aus der Dokumentation zum SAP-Connector übernommen und hat viele weitere Features, welche in der Datei \textit{NCo\_30\_ProgrammingGuide.pdf} auf der beigefügten CD nachgelesen werden können. 
+
+\subsection{SAP-Datenbankabfrage} \label{SAPAbfrage}
+Die Abfrage der SAP-Datenbank erfolgt über einen RFC\_READ\_TABLE-Funktionsbaustein, welcher standardmäßig von SAP zur Verfügung gestellt wird. Die Benutzung dieses Bausteines hat Vor- und Nachteile. Die \textbf{Vorteile} sind:
+\begin{itemize}
+	\setlength{\itemsep}{-10pt}
+	\item Die Daten können aus jeder Tabelle auslesen werden,
+	\item kein Wissen über den inneren Aufbau des Funktionbausteines notwendig,
+	\item der Baustein ist standardmäßig vorhanden,
+	\item keine ABAP-Entwicklung/Erweiterung notwendig.
+\end{itemize}
+Mit dem Zugriff auf die Tabellen sind auch \textbf{Nachteile} verbunden:
+\begin{itemize}
+	\setlength{\itemsep}{-10pt}
+	\item Mit \textit{RFC\_READ\_TABLE} können die Daten \textit{nur} ausgelesen werden, zum Schreiben von Daten kann er nicht genutzt werden,
+	\item Wissen über die abzufragende Tabelle ist notwendig (Name, Felder, Feldgröße u. ä.),
+	\item Daten aus unterschiedlichen Tabellen können nur über aufeinanderfolgende Abfragen des RFC\_READ\_TABLE-Bausteines zur Verfügung gestellt werden.
+\end{itemize}
+Momentan gibt es leider keine andere Alternative, die Daten von der SAP-Datenbank abzufragen, weil sowohl keine Berechtigung als auch kein Vorwissen über die Erstellung eines RFC-Bausteines vorhanden ist.
+
+\section{Entwurf der Qt-Anwendung}
+\subsection{Funktioneller Entwurf Qt-Anwendung}
+Aus Sicherheitsgründen wird während der Implementierung nicht mit der Produktions-Datenbank, sondern mit der dafür entwickelten FlasDB-dev-Datenbank gearbeitet.
+Die Anwendung bindet sowohl die \textit{FlashDBLib} als auch die \textit{SAPDBLib} mit ein. Als Erstes wird die SAP-Datenbank abgefragt. Nach einer erfolgreichen Abfrage wird die FlashDB-dev-Datenbank abgefragt (siehe Abb. \ref{fig:EntwurfQtAnwendung}). 
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\linewidth]{images/EntwurfQtAnwendung}
+\caption[Entwurf Qt-Anwendung]{Entwurf Qt-Anwendung}
+\label{fig:EntwurfQtAnwendung}
+\end{figure}
+Die Kommunikation der Qt-Anwendung mit der FlashDB-dev-Datenbank sowie mit der .NET-Anwendung erfolgt über TCP/IP. Einzelheiten zum Verbindungsaufbau und den Funktionen der FlashDBLib sind nicht der Bestandteil dieser Arbeit und werden nicht weiter erläutert.\\ 
+\subsection{Klassenentwurf}
+Für eine bessere Übersicht der Qt-Anwendung wurde ein Klassendiagramm erstellt, welches in der Abb. \ref{fig:KlassendiagrammQtEntwurf} zu sehen ist.
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.4\linewidth]{images/KlassendiagrammQtEntwurf}
+\caption[Klassendiagramm Qt-Anwendung]{Klassendiagramm Qt-Anwendung}
+\label{fig:KlassendiagrammQtEntwurf}
+\end{figure}
+Die Klassenvariable \textit{m\_remoteApp} ist ein Proxy der Schnittstelle zur C\#-Anwendung und stellt ihre Funktionen der Server-Anwendung zur Verfügung.
+
+\subsection{Adaptor und Interface} \label{AdaptorInterface}
+Für die Verknüpfung der Anwendungen mit der Außenwelt werden Adaptoren und Interfaces erstellt. Durch die Werkzeuge, die Qt zur Verfügung stellt, ist es einfach, einen Adaptor und ein Interface zu erstellen. 
+\subsubsection{Interface}
+Jedes Objekt kann ein oder mehrere Interfaces unterstützen. Es ist eine Art Sammlung von Methoden und Signalen. Interfaces definieren den Typ einer Objektinstanz. D-Bus unterscheidet Interfaces durch einen Namensraum-String wie z. B. \textit{org.freedesktop.Introspektable} voneinander \mbox{(vgl. \cite[Web]{freedesktop2015})}.
+\subsubsection{Adaptor}
+Adaptoren sind spezielle Klassen, die an eine beliebige QObjekt-abgeleitete Klasse gebunden werden. Sie stellen eine Verbindung zur Außenwelt durch Verwendung des D-Busses her. Adaptoren sind ''schlanke'' Klassen, welche die Aufgabe haben die Aufrufe von und zu einem realen Objekt weiterzuleiten. Sie haben die Möglichkeit die Input-Daten zu überprüfen, zu konvertieren und dadurch das eigentliche Objekt zu schützen. \\
+Im Vergleich zu Mehrfachvererbung können Adaptoren jederzeit zu einem Objekt hinzugefügt, aber nicht entfernt werden. Das sorgt für mehr Flexibilität beim Export von vorhandenen Klassen. Ein weiterer Vorteil ist die ähnliche, aber nicht identische Funktionalität von Methoden mit demselben Namen, aber unterschiedlichen Interfaces. Das kann der Fall sein, wenn eine neuer Version von Standardinterface zu einem Objekt hinzugefügt wird \mbox{(vgl. \cite[Web]{Qt2015a})}.
+  
+\subsection{Qt-Oberflächenentwurf}
+Die Oberfläche zum Testen ist einfach aufgebaut. Das Ziel ist die visuelle Darstellung der Ergebnisse sowohl von der SAP- als auch von der FlashDB-dev-Datenbank. In die Eingabefelder können entweder Auftrags- oder SAP-Nummer eingetragen werden (siehe Abb. \ref{fig:QtObeflaechenentwurf}). 
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\linewidth]{images/QtObeflaechenentwurf}
+\caption[Qt Oberflächenentwurf]{Qt Oberflächenentwurf}
+\label{fig:QtObeflaechenentwurf}
+\end{figure}
+Mit dem \textit{Ping}-Button kann die Erreichbarkeit der SAP-Destination überprüft werden. Die Anmeldeparameter für die SAP-Destination werden hier nicht abgefragt, sie sind in der C\#-Anwendung vordefiniert und können nur dort geändert werden. Mit dem \textit{READ}-Button werden die Datensätze zur Auftragsnummer ausgelesen, dabei wird die Materialnummer, die gesamte Menge sowie die gesamte Fail-Menge des Auftrages ausgegeben. Der \textit{MaterialKurzText}-Button lädt den Kurztext zu einer SAP-Nummer. Damit die Ergebnisse visuell vergleichbar sind, werden die Datensätze aus beiden Datenbanken in den entsprechenden Feldern angezeigt. 
+
+\section{Funktioneller Entwurf RFC-Baustein}
+Die im Kapitel \ref{EntwurfC} beschriebene C\#-Anwendung benutzt den \textit{SAP Connector für Microsoft .NET (3.0)}, welcher von SAP zur RFC-Kommunikation zur Verfügung gestellt wird. Abgekürzt wird er mit NCo 3.0 (mehr dazu siehe SAP\_Doku auf der CD). Damit die Kommunikation zu Stande kommen kann, muss der aufzurufende Funktionsbaustein, in dieser Arbeit ist es ein RFC\_READ\_TABLE-Baustein, RFC-Funktionalitäten besitzen (siehe \mbox{Abb. \ref{fig:rfcTheobald}}). 
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\linewidth]{images/rfcTheobald}
+\caption[RFC-fähiger Funktionsbaustein]{RFC-fähiger Funktionsbaustein}
+\label{fig:rfcTheobald}
+\end{figure}
+Diese Sicht ist in der SAP-GUI über Transaktion SE37 und RFC\_READ\_TABLE anzeigen zu erreichen.
+Bei der Neuentwicklung eines Funktionbausteines sollte diese Option unbedingt gesetzt werden, sonnst kann er nicht über die RFC-Schnittstelle mit externen Programmen kommunizieren.
+
+\section{Funktioneller Entwurf D-Bus}
+Die Datenübertragung zwischen einer Qt- und .NET-Anwendung wird über D-Bus realisiert. Das D-Bus-System ist von Qt für \acl{IPC} empfohlen. Die Kommunikation kann nicht nur zwischen zwei Anwendungen auf demselben Rechner, sondern auch zwischen Anwendungen auf zwei unterschiedlichen Rechnern über TCP/IP stattfinden. Einen Überblick dazu bietet Abb. \ref{fig:EntwurfDBus}. 
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\linewidth]{images/EntwurfDBus}
+\caption[Entwurf D-Bus]{Entwurf D-Bus}
+\label{fig:EntwurfDBus}
+\end{figure}
+
+Schwieriger gestaltet sich die Umsetzung von D-Bus auf der Windows-Plattform. Ursprünglich kommt D-Bus aus der Linux-Welt, wo es als Middleware zwischen Prozessen und grafischer Oberfläche agiert. Für Windows-Plattformen gibt es D-Bus in dieser Form nicht. Abhilfe schafft eine Nachinstallation der aktuellen Version von D-Bus für Windows. Die neuste Version  ist 1.10.4 (Stand November 2015), welche unter \url{http://dbus.freedesktop.org/releases/dbus} heruntergeladen werden kann. Der Installationsvorgang ist im Kapitel \ref{D-Bus} ausführlich beschrieben.\\
+Die Funktion des D-Busses zwischen zwei Qt-Anwendungen auf unterschiedlichen Rechnern über TCP/IP wurde anhand des Remotecontrolleredcar-Beispiels getestet und nachgewiesen (gehört nicht zur Dokumentation). Die weitere Entwicklung findet auf dem lokalen Rechner statt. Das Ziel ist es, eine Kommunikation zwischen zwei Anwendungen, welche in unterschiedlichen Programmiersprachen entwickelt wurden, auf physikalisch getrennten Rechnern aufzubauen.
+\newpage
+\section{Fehlende Einbindungen für die Gesamtanwendung} \label{BeispielQt}
+\subsection{Funktioneller Entwurf der Gesamtanwendung}
+Es werden sehr ''schlanke'' Projekte entwickelt, da es hauptsächlich um die Funktionalität geht. Als Erstes muss der D-Bus Server wie im Kapitel \ref{D-Bus} beschrieben, eingerichtet und gestartet werden. In Abb. \ref{fig:BeispielQtDbusNet} ist die Übersicht der Gesamtanwendung dargestellt.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{images/BeispielQtDbusNet}
+	\caption[Gesamtübersicht Beispielanwendung]{Gesamtübersicht Beispielanwendung}
+	\label{fig:BeispielQtDbusNet}
+\end{figure}
+System A bindet sowohl die FlashDBLib- als auch die SAPDBLib-Bibliotheken ein. Es kommuniziert direkt mit der FlashDB-dev-Datenbank und mit dem System B. System B kommuniziert über die RFC-Schnittstelle mit der SAP-Datenbank und stellt die Ergebnisse der Abfragen in Form einer Server-Anwendung zur Verfügung.\\
+
+\subsection{Klassenentwurf}
+\subsubsection{Klassendiagramm Qt}
+Die Qt-Gesamtanwendung wird sowohl mit zusätzlichen GUI-Elementen als auch mit weiteren Funktionen erweitert (siehe dazu Klassendiagramm \mbox{Abb. \ref{fig:KlassendiagrammQt})}.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.5\linewidth]{images/KlassendiagrammQt}
+	\caption[Qt-Klassendiagramm der Gesamtanwendung]{Qt-Klassendiagramm der Gesamtanwendung}
+	\label{fig:KlassendiagrammQt}
+\end{figure}
+Die Membervariable m\_sapDB ist das Objekt zur Kommunikation mit der C\#-Serveranwendung. Die anderen zwei Objekte, m\_productDB und m\_resultDB, sind für die Verbindung und den Zugriff auf die FlashDB-dev-Datenbank notwendig.
+Im Laufe des Analyseprozesses wurde festgestellt, dass nicht alle Funktionen in FlashDBLib vorhanden sind, so ist z. B. die Funktion \textit{getOrderQty()} in der FlashDBLib nicht vorhanden. Eine Ausgabe für die SAPDBLib wird dennoch implementiert.  
+\subsubsection{Klassendiagramm C\#}
+Die C\#- Serveranwendung wurde entsprechend angepasst (siehe \mbox{Abb.  \ref{fig:KlassendiagramGesamt}}).
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1\linewidth]{images/KlassendiagramGesamt}
+	\caption[C\#-Klassendiagramm der Gesamtanwendung]{C\#-Klassendiagramm der Gesamtanwendung}
+	\label{fig:KlassendiagramGesamt}
+\end{figure}
+Die \textit{SapServerQuery}-Klasse wurde um weitere Funktionen erweitert. Sie wird von der \textit{ifaceServer}-Schnittstelle abgeleitet und stellt den Clients die Funktionen zur Verfügung. In der \textit{Programm}-Klasse wurde zusätzlich eine Verbindung zum D-Bus implementiert. Die Konfiguration der Destination bedarf dagegen keinen Veränderungen.\\
+
+\subsection{Oberflächenentwurf der Gesamtanwendung}
+Das GUI der Qt-Anwendung wird um weitere Elemente erweitert und bietet noch mehr Ein- und Ausgabefelder (siehe Abb. \ref{fig:QtGui}). 
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\linewidth]{images/QtGui}
+\caption[erweiterte Qt-GUI]{erweiterte Qt-GUI}
+\label{fig:QtGui}
+\end{figure}
+
+Die Eingabefelder sind dunkelgrau hinterlegt. Der \textit{SapFromPa}-Button liest die SAP-Nr. zu einem bestimmten PA aus den SAP- und FlashDB-dev Datenbanken aus und zeigt die Ergebnisse in dafür vorgesehenen Ausgabefeldern an.\\
+Der \textit{QtyPass}-Button liest die Gesamtauftragsmenge aus der SAP-Datenbank aus. Da es in der FlashDBLib keine Funktion für die Ermittlung der Gesamtauftragsmenge gibt, wird die gesamte Pass-Menge aus dem \textit{Final Test}-Arbeitsvorgang ausgegeben. Es ist zu erwarten, dass die Ergebnisse nicht übereinstimmen werden, da nach dem Final Test weitere Teile aussortiert werden.\\
+Der \textit{getOrderType}-Button lädt den Auftragstyp zu einer PA-Nummer. Diese Funktion ist in der FlashDBLib noch nicht implementiert und wird nur für die Ausgabe der Werte aus der SAP-Datenbank verwendet.\\
+Der \textit{getMKT}-Button liest zu einer SAP-Nr. den Materialkurztext aus beiden Datenbanken aus und schriebt Ergebnisse in die dafür vorgesehenen Felder.\\ 
+Der \textit{Ping}-Button führt einen Ping der Destination durch und gibt das Ergebnis im Statusfenster aus. 
+
+

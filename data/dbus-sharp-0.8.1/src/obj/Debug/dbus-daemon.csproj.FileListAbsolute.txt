@@ -1,0 +1,3 @@
+C:\Users\konstantin.linker\Desktop\dbus-sharp-0.8.1\src\obj\Debug\dbus-daemon.csprojResolveAssemblyReference.cache
+C:\Users\konstantin.linker\Desktop\dbus-sharp-0.8.1_1\src\obj\Debug\dbus-daemon.csprojResolveAssemblyReference.cache
+C:\Users\konstantin.linker\Desktop\dbus-sharp-0.8.1_1\src\dbus-daemon.exe.config

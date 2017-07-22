@@ -1,0 +1,112 @@
+\chapter{Implementierung} 
+\section{Entwicklungsumgebung und andere Komponenten}
+Für diese Arbeit wurden folgende Entwicklungsumgebungen und Komponenten eingesetzt:
+\begin{itemize}
+	\setlength{\itemsep}{-10pt}
+	\item Qt Creator 3.4.2 (opensource). Based on Qt 5.5.0 (MSVC2010, 32bit)
+	\item Microsoft Visual Studio 2010 mit Microsoft .NET Framework Version 4.5.50938 RTMRel
+	\item Microsoft Visual Studio Community 2015 mit Microsoft .NET Framework Version 4.6.00081
+	\item SAP .NET-Connector NCo 3.0 (x64)
+	\item FlashDBLib v.2015\_10\_06
+	\item dbus-1-10-4 (\url{http://dbus.freedesktop.org/releases/dbus/})
+	\item dbus-sharp-0.8.1 (\url{https://github.com/mono/dbus-sharp/releases})
+	\item Expat XML Parses v.2.1.0 
+	\item GetText v.0.14.4
+\end{itemize} 
+
+
+\section{Projekte und Dateien}
+Die beigefügte CD enthält alle notwendigen Projekte und Dateien, um diese Arbeit Schritt für Schritt nachzuvollziehen. 
+\begin{itemize}
+	\setlength{\itemsep}{-10pt}
+	\item Das Projekt für die Installation des D-Busses liegt im Ordner \textit{D-Bus\_Installation} in der aktuellen Version dbus-1.10.4 vor (Stand November 2015).
+	\item Im Ordner \textit{DBusSharp} befindet sich die C\# Implementierung von D-Bus. Die aktuelle Version ist dbus-sharp-0.8.1 (Stand November 2015).
+	\item Im Ordner \textit{libs} sind für C\#-Anwendungen benötigte .dll-Dateien zu finden. Ebenfalls ist die vom Projekt dbus-sharp-0.8.1 erzeugte dbus-sharp.dll enthalten.
+	\item Im Ordner \textit{SAP\_Doku} befinden sich die Dokumentation, der Programmüberblick, der Leitfaden zur Programmierung sowie Tutorials zur Entwicklung einer SAP-Schnittstelle. Der SAP-Connector für die 32- und 64-bit Systeme ist ebenfalls enthalten.
+	\item Die einzelnen Testprojekte sind im Ordner \textit{Funktionstest} zu finden.
+	\begin{itemize}
+		\setlength{\itemsep}{-10pt}
+		\item \textit{CSharpToSapExample} - ein Beispiel für die Erreichbarkeit des SAP-Servers aus einer C\#-Anwendung.
+		\item \textit{QtDbusCSharpSapExample\_CSharp} - ein Teilprojekt zum Testen der Gesamtfunktionalität. Es beinhaltet den C\#-Teil.
+		\item  \textit{QtDbusCSharpSapExample\_Qt} - ein Teilprojekt zum Testen der Gesamtfunktionalität. Es beinhaltet den Qt-Teil und das dazugehörige GUI.
+	\end{itemize}
+	\item Der Ordner \textit{Erweiterter\_Test} enthält zwei Projekte. Die Projekte stellen  Erweiterungen von bereits entwickelten Projekten dar. In dieser Variante erfolgt die Abfrage der SAP-Datenbank über das Interface der C\#-Anwendung. Die Funktionen sind entsprechend erweitert.
+	\begin{itemize}
+		\setlength{\itemsep}{-10pt}
+		\item Im Ordner \textit{SapDbusCSharpSap\_Qt} ist die Qt-Seite des Tests. Die Werte der Qt-GUI werden an die C\#-Anwendung geschickt und die Ergebnisse der SAP-Abfrage auf der GUI ausgegeben. 
+		\item Im Ordner \textit{SapDbusCSharpSap\_CSharp} ist die C\#-Anwendung des Tests. Sie nimmt die Werte der Qt-Anwendung entgegen, baut eine Verbindung mit der SAP-Datenbank auf, führt eine Abfrage durch und gibt die Ergebnisse an die Qt-Anwendung zurück. 
+	\end{itemize}
+	\item Der Ordner \textit{Aufbau\_der\_Bibliothek} besteht aus zwei Unterordnern und beinhaltet ein erweitertes C\#-Projekt und die Qt-Anwendung. Die Qt-Anwendung wird später als statische Bibliothek eingebunden.
+	\begin{itemize}
+		\setlength{\itemsep}{-10pt}
+		\item Der Ordner \textit{SAPDBLib} ist das Projekt, welches den Code selbst sowie die Testroutinen beinhaltet. Es kann als eine statische Bibliothek in ein beliebiges Projekt eingebunden werden. 
+		\item Der Ordner \textit{SapDBServer} beinhaltet die C\#-Serveranwendung und ist mit weiteren Funktionen erweitert. 
+	\end{itemize}
+	\item Im Ordner \textit{SAPDBLibTest} sind beide Projekte, sowohl für die Server als auch für die Client-Anwendung zu finden. Die Qt-Anwendung bindet FlashDBLib- und SAPDBLib-Bibliotheken mit ein und hat eine grafische Oberfläche für die Darstellung der Ergebnisse. Das Qt-Projekt SAPDBLibTest ist mit den dazugehörigen SAPDBLib und FlashDBLib Projekten, welche in der .pro Datei eingebunden sind, lauffähig.
+	\item Der Ordner \textit{dbus-sharp-0.8.1} beinhaltet die C\# Implementierung des D-Busses.
+	\item Die Konfigurationsdatei \textit{session-local.conf} beinhaltet die Konfiguration des Session-Busses.
+	\item Im Ordner \textit{Software} sind die verwendeten Versionen von \textit{Expat XML Parser} und \textit{GetText} Software zu finden.
+\end{itemize}
+
+\section{D-Bus Einrichtung} \label{D-Bus}
+In diesem Kapitel wird beschrieben, wie der D-Bus installiert und eingerichtet werden muss. Außerdem werden die Konfiguration und die Besonderheiten der DBusSharp Einbindung erläutert.
+\subsection{D-Bus Installation}
+Der D-Bus gehört nicht zum Windows Betriebssystem und ist nicht standardmäßig vorhanden. Er muss für Windows-Systeme nachinstalliert werden. Die aktuelle Version von D-Bus ist v.1.10.4 und kann unter \url{http://dbus.freedesktop.org/releases/dbus} heruntergeladen werden. Die im Netz vorhandenen ausführbaren Installationsdateien mit der Endung .exe beinhalten meistens eine veraltete Version von D-Bus, welche nicht mehr unterstützt wird. Die aktuelle und stabile Version ist D-Bus 1.10.4 (Stand November 2015), die als Projektdatei zur Verfügung steht. Für die Installation werden außerdem \textit{Expat XML Parser (aktuell v. 2.1.0)} und \textit{GetText for Windows (aktuell v. 0.14.4)} benötigt, diese müssen zuerst installiert werden. Erst danach kann der D-Bus wie folgt eingerichtet werden (\textit{Visual Studio Command Prompt (2010)}-Konsole) :
+\begin{itemize}
+	\setlength{\itemsep}{-10pt}
+	\item build-Verzeichnis mit mkdir erstellen: \\ c:\textbackslash Weg\textbackslash zum\textbackslash DBus-1.10.4\textbackslash mkdir build
+	\item ins build-Verzeichnis wechseln:\\ \textit{cd build}
+	\item eine Systemvariable setzen (optional):\\
+	set PATH= \%PATH\%; c:\textbackslash Programm Files<x86>\textbackslash CMAKE\textbackslash bin
+	\item cmake mit Einbeziehung von Expat-Bibliotheken ausführen:\\
+	cmake -DEXPAT\_INCLUDE\_DIR="c:\textbackslash Programm Files <x86>\textbackslash Expat 2.1.0\textbackslash Source\textbackslash lib"\- -DEXPAT\_LIBRARY="c:\textbackslash Programm Files <x86>\textbackslash Expat 2.1.0\textbackslash Bin\textbackslash libexpat.lib" ..\textbackslash cmake -G "Visual Studio 10"
+	\item das Projekt mit \textit{msbuild} erzeugen:\\ 
+	msbuild ALL\_BUILD.vcxproj 
+	\item Nach der erfolgreichen Kompilierung erscheint eine Meldung wie in Abb. \ref{fig:dbusBuild}:
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1\linewidth]{images/dbusBuild}
+		\caption[D-Bus Projekt kompilieren]{D-Bus Projekt kompilieren}
+		\label{fig:dbusBuild}
+	\end{figure}
+	\item Projekt All\_BUILD.vsxproj starten und \textit{INSTALL}-Objekt kompilieren. Es entsteht ein dbus-Ordner unter c:\textbackslash Programm Files <x86>\textbackslash dbus. 
+	\item \textit{dbus-1-3.dll} aus dem dbus-Ordner sowohl in das eigene Projekt als auch in den Ordner mit dem \textit{qdbusmonitor} kopieren.
+\end{itemize}  
+Der Installationsvorgang ist an dieser Stelle abgeschlossen.\\\\
+Folgende Windows-Betriebssysteme werden unterstützt : Windows XP, Windows Vista and Windows 7. Unterstützte Compiler/sdk sind MSVC 2010, mingw-w32/w64(gcc) and cygwin(gcc) (vgl. \cite[Web]{freedesktop2015}).
+\subsection{D-Bus Konfiguration}
+Damit die Kommunikation über D-Bus statt finden kann, muss dieser konfiguriert werden. Für beide Bus-Arten, Session- und System-Bus, gibt es eigene Konfigurationsdateien. In dem erzeugten Ordner  \textit{c:\textbackslash Programm Files <x86>\textbackslash dbus\textbackslash etc\textbackslash dbus-1} liegt eine Konfigurationsdatei für den Session-Bus namens \textit{session.conf}, welche als Dummy-Datei agiert. Im gleichen Ordner muss eine \textit{session-local.conf}-Datei erzeugt werden. Später wird beschrieben, wie diese konfiguriert werden muss. Im allgemeinen Fall wird die default- Konfiguration welche unter \textit{C:\textbackslash Program Files (x86)\textbackslash dbus\textbackslash share\textbackslash dbus-1} liegt, für die Beschreibung des Busses verwendet. Für eigene Konfigurationen wird diese aber nicht genutzt, sondern die oben erzeugte \textit{session-local.conf}-Datei. Diese Datei überschreibt die Standardkonfigurationen des Busses.\\
+Im zweiten Schritt wird die Konfigurationsdatei  \textit{session-local.conf} um folgende Zeilen erweitert:\\\\ \textit{<listen>tcp:host=0.0.0.0,port=12345</listen>}\\
+%\textit{ <auth>ANONYMOUS</auth>}\\
+\textit{ <allow\_anonymous/>}\\\\
+Die für diese Arbeit verwendete \textit{session-local.conf} -Datei befindet sich auf der beigefügten CD. Die Anweisung zwischen <listen>und</listen> beschreibt auf welche Verbindungsarten der Session D-Bus hören soll. Mit ''tcp:host=0.0.0.0, port=12345'' kann jede IP-Adresse auf dem Port 12345 sich mit dem Bus verbinden.
+Durch ''allow\_anonymous'' werden Anfragen von Jedem User akzeptiert. Weitere D-Bus Konfigurationsmöglichkeiten sind unter \url{http://dbus.freedesktop.org/doc/dbus-daemon.1.html} ausführlich beschrieben.\\
+Nach dem die Konfiguration durchgeführt wurde, kann der dbus-daemon  durch die Anweisung: \textit{dbus-daemon --conf-file=../etc/dbus-1/session-local.conf} von der Kommandokonsole gestartet werden. Es reicht allerdings auch aus dbus-monitor.exe auszuführen. Dies startet sowohl den D-Bus selbst als auch das darauf zugreifendes Monitoring Tool.\\
+Damit der dbus-monitor eine bestimmte IP-Adresse überwacht, kann es von der Kommandokonsole mit der Anweisung\\ \textit{dbus-monitor - -address tcp:host=127.0.0.1,port12345}\\ gestartet werden. Die IP-Adresse und auch der Port können je nach Fall angepasst werden. In dem Beispiel wird die gesamte D-Bus Kommunikation, die auf dem Port 12345 stattfindet, auf dem lokalen Rechner überwacht und kann analysiert werden. \\
+Alternativ dazu kann die von der Qt bereitgestellte Anwendung \textit{qdbusviewer.exe} \label{qdbusviewer} aus dem Qt-Installationsverzeichnis ausgeführt werden. Dabei ist es wichtig, durch den D-Bus erstellte \textit{dbus-1-3.dll} in das Verzeichnis von  \textit{qdbusviewer.exe} zu kopieren. Im Fall mit der \textit{qdbusviewer.exe}-Datei findet die Anwendung den Session D-Bus automatisch.\\
+Nachdem der D-Bus konfiguriert und gestartet worden ist, kann es durch die Anwendungen benutzt werden.
+
+\subsection{DBusSharp}
+DBusSharp ist eine C\# Implementierung des D-Busses, die auch ''managed D-Bus'' genannt wird. Die Bibliothek befindet sich in der aktiven Entwicklung und wird bereits in vielen Projekten eingesetzt. Es ist eine geprüfte High-Perfomance Brücke für die Kommunikation zwischen verschiedenen Systemen, unabhängig von der Programmiersprache. Der Quellcode ist MIT-X11 lizenziert (Free Software / Open Source), so dass er in vielen Produkten mit wenigen Veränderungen eingesetzt werden kann (vgl. \cite[Web]{WebDBusSharp2015}).\\
+Die Weiterentwicklung von D-Bus für Windows wurde mit ndesk-dbus-0.6.1 eingestellt und von der Community übernommen, leider leidet dadurch die Dokumentation. Die aktuellste Version von D-Bus für Windows sowie einige Beispielprojekte können unter \url{https://github.com} heruntergeladen werden.
+Mit der Version 0.8.1 steht das aktuelle Release zur Verfügung (Stand November 2015). \\
+Der im Kapitel \ref{D-Bus} beschriebene D-Bus ist noch fehlerhaft. Dazu existieren bereits viele Einträge im Bugzilla. Einer davon ist vom 22.09.2015, welcher unter \url{https://bugs.freedesktop.org/show_bug.cgi?id=92080} nachgelesen werden kann. Dieser Eintrag beschreibt, wie sich die Erkennung vom Session-Bus unter Linux und Windows voneinander unterscheiden. Eine allgemeine Lösung gibt es noch nicht, allerdings ist es möglich, durch viele kleinere Anpassungen an unterschiedlichen Stellen die Probleme zu umgehen. Die Umsetzung kann ebenfalls unter dem Eintrag nachgelesen werden. In diesem Projekt wird aber ein anderer Weg eingeschlagen. \\
+Ein Trick erleichtert die Arbeit. Der lokale D-Bus wird für die TCP/IP Kommunikation entsprechend angepasst. Eine Anpassung des \textit{Address.cs}-Files im Projekt \textit{dbus-sharp-0.8.1} in der Zeile 75 löst das Problem. Dazu muss die Zeile \newpage \mbox{\textit{result = ''autolaunch:'';}} \\ durch\\ \mbox{\textit{result = ''tcp:host=127.0.0.1,port=12345,family=ipv4'';}}\\\\ ersetzt werden. Das bewirkt, dass der Session-Bus nicht durch eine Variable definiert wird, sondern lokal unter der Adresse zu finden ist. 
+
+\section{QtDBusXML Compiler}
+Der QtDBus XML Compiler ist ein Werkzeug zur Analyse der Interface-Beschreibung und Erzeugung von einem statischen Code, welches dieses Interfaces repräsentiert. Er ermöglicht den Aufruf von entfernten Objekten oder die Implementierung von deren Interfaces. Der \textit{Qdbusxml2cpp} Compiler kann sowohl Interface(proxy)-Class als auch Adaptor-Class erzeugen. Die Klassen bestehen je aus einem Header(.h) und einer Quellcode(.cpp) Datei, welche für die eigenen Bedürfnisse angepasst und im eigenen Projekt eingesetzt werden können (vgl. \cite[Web]{Qt2015b}).\\
+Die Funktion eines Adaptor/Interface wurde bereits im Kapitel \ref{AdaptorInterface} beschrieben. Die Adaptoren/Interfaces sind Qt-spezifisch. Für eine C\#-Anwendung wird der Interface anders implementiert. Die Erstellung und der Einsatz von Adaptor/Interface für eine Qt-Anwendung wird wie folgt durchgeführt:
+\begin{itemize}
+	\setlength{\itemsep}{-10pt}
+	\item Qt-Programm schreiben,
+	\item XML Datei mit qdbuscpp2xml erstellen,
+	\item mit qdbusxml2cpp aus der XML Datei eine Adaptor-Klasse erstellen,
+	\item mit qdbusxml2cpp aus der XML Datei eine Interface(proxy)-Klasse erstellen,
+	\item den Adaptor und das Interface dem Projekt hinzufügen.
+\end{itemize} 
+Der XML-Compiler \textit{qdbuscpp2xml} ist im Installationsverzeichnis von Qt, z. B. unter C:\textbackslash Qt\textbackslash 5.5\textbackslash msvc2010\textbackslash bin zu finden. Das als Beispiel erzeugte \textit{SapDbus}-Projekt besteht aus folgenden Dateien: main.cpp, sapwindow.cpp und sapwindow.h und ist im Ordner \textit{Funktionstest -> QtDbusCSharpSapExample\_Qt} zu finden.\\
+Aus der Header Datei(.h) wird ein XML-File erstellt. Der Befehl dazu ist: \textit{\textbf{\mbox{qdbuscpp2xml} sapwindow.h -o sapwindow.xml}}. Beispiele zu diesen und anderen in dieser Arbeit erzeugten Dateien/Projekten sind auf der beigefügten CD zu finden.\\
+Mit dem Befehl: \textit{\textbf{qdbusxml2cpp -a sap\_adapt sapwindow.xml}} wird aus der XML-Datei eine Adaptor-Klasse generiert.\\
+Ähnlich dem Adaptor wird eine Interface Klasse mit: \textit{\textbf{qdbusxml2cpp -p sap\_interface sapwindow.xml}} generiert. Die erzeugten Header- und Quellcode-Dateien sind ebenfalls im Ordner C:\textbackslash Qt\textbackslash 5.5\textbackslash msvc2010\textbackslash bin zu finden und müssen in das eigene Projekt kopiert werden.\\
+Im letzten Schritt werden die Header-Dateien mit \textbf{\#include ''sap\_adapt.h''} und
+\textbf{\#include ''sap\_interface.h''} in das Projekt eingebunden.  

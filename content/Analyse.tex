@@ -1,0 +1,157 @@
+\chapter{Analyse}
+Dieses Kapitel beschäftigt sich mit der Untersuchung des Projektes. Es müssen alle Prozesse, Anforderungen und Informationen, die für die Software von Bedeutung sind, möglichst genau bestimmt und verstanden werden. Es wird zunächst aktuelle Zustand betrachtet, dann werden die Probleme und Schwächen aufgelistet. Anschließend erfolgt eine Anforderungsdefinition und zum Schluss werden mögliche Lösungen skizziert.
+	
+	\vspace{5mm}
+	
+\section{Analyse des Ist-Zustandes}
+Zu Beginn dieser Bachelorarbeit wurden die Testreporte von einem Testentwickler erstellt. Die relevanten Informationen wurden über das WebInterface der FlashDB-Datenbank und über vom Tester angelgte Logfiles ermittelt und dann in eine Microsoft Word Vorlage eingefügt. 
+
+	\vspace{5mm}
+	
+\subsection{Datenzustand}
+Jede Woche werden tausende Speichermedien unter unteschiedlichen Testbedingungen und Anforderungen getestet. Dies versucht eine große Menge an Daten von Testergebnissen. Diese werden auf dem eigenen Server \textit{FlashDB-Server} gespeichert und mittels firmeneigener Software in eine von zwei Datenbanken implementiert. Die \textit{Products} Datenbank beinhaltet Produktspezifikationen sowie zu benutzende Testbedingung, die vom Tester vor Beginn eines Tests ausgelesen werden. In die \textit{Results} Datenbank werden die Testergebnisse vom Tester geschrieben. Durch die Implementierung eines VBA Interfaces durch einen Mitarbeiter der Testentwicklung, kann man viele Informationen beider Datenbanken im Browser unter \textit{http://flashdb} abfragen (Abb.3.1) . Alle Daten werden persistent gespeichert, weshalb die Speicherbelegung stetig anwächst. 
+\begin{figure}
+\centering
+\includegraphics[scale=0.6]{images/flashdb01}
+\caption{Datenhandling vom Tester bis zum Nutzer}
+\label{fig:Datenaustausch}
+\end{figure}
+Zum Zeitpunkt dieser Arbeit belegen alle Daten einen Speicherplatz von 60 GB. Diese Daten werden für verschiedene Zwecke erhoben. Sie dienen als Hilfe für die Geschäftsführung, die wöchentlich eine Statistik erhält. Des weiteren helfen sie bei der Fehler- und Fehlerquellensuche und als Beleg für Kunden über die durchgeführten Testschritte. 
+	
+	\vspace{5mm}
+	
+\subsection{Datenauswertung}
+Anhand der \ac{PA} Nummer ist es möglich verwendete Prüflinge, durchgeführte Tests, Testzeiten und Testergebnisse zu ermitteln. Diese werden immer in ein gleich strukturiertes Word Dokument implementiert. Dies gliedert sich wie folgt:
+\begin{enumerate}
+\item Verwendete Prüflinge
+\item Durchgeführte Tests
+\item Ermittelte Testzeiten
+\item Testergebnisse
+\item Auswertung
+\end{enumerate}
+Es erfordert Zeit sich durch einen \ac{PA} durchzuklicken um alles nötige zu beschaffen, da nicht alle Informationen sofort ersichtlich sind. Die erste Ansicht nach Eingabe der \ac{PA} Nummer ist in Abbildung 3.2 zu sehen.
+\begin{figure}
+\centering
+\includegraphics[scale=0.5]{images/flashdb_web01}
+\caption{Web Ansicht FlashDB-Datenbank}
+\label{fig:Auswertung}
+\end{figure}
+Bei dem Test \textit{Preformat/Firmware einspielen auf \ac{CFSDMK}} kann die Testzeit, Firmware, Testersoftware, Testerfirmware und mögliche Fehler nur durch die Auswertung von Logfiles, welche auf dem Server \textit{sbdesql01} abgelegt werden, ermittelt werden. Dies erfordert spezielles Wissen über den Test und die im Logfile hinterlegten Informationen. \\ Des weiteren müssen Tabellen mit Fehlerstatistiken übernommen werden. 
+
+	\vspace{5mm}
+	
+\subsection{Tests}
+Jeder Kunde der Swissbit AG stellt eigene Anforderungen an unsere Produkte. Diese Anforderungen sind Abhängig von dem vom Kunden vorhergesehenen Einsatzort und Einsatzzweck des Speichermediums. Hierfür hat die Testentwicklung unterschiedliche Testszenarien entwickelt und in der Products-Datenbank hinterlegt. Jedes Speichermedium durchläuft nach der Fertigung Tests. Es werden sieben Hauptkategorieren unterschieden.
+\begin{itemize}
+\item Preformat
+\item Ambient ApplTest
+\item Extended Temperature Test
+\item Final Test
+\item Outgoing Check
+\item QS Verify
+\item Security Configuration
+\item Image Configuration
+\end{itemize}
+Für jeden Speichermedientyp existiert ein Testgerät auf dem die Produkte von einem Mitarbeiter in einen Sockel aufgesteckt werden. Dieser gibt dann in der firmeneigenen Testsoftware die \ac{PA} Nummer ein und startet den Test (Abb. 3.3). Die Swissbit AG bietet dem Kunden die Testverfahren drei Temperaturbereiche. \\
+\textit{Commercial} von 0°C bis +70°C. \\
+\textit{Extended} von -25°C bis +85°C. \\
+\textit{Industrial} von -40°C bis 85°C. \\
+In diesen Temperaturspannen durchlaufen die Produkte mehrmalige Schreib- und Lesezyklen. Sämtliche Informationen wie zum Beispiel über die erreichte Temperatur, geschrieben und gelesene Blöcke werden von der Software erfasst und gespeichert. \\
+\begin{figure}[!htbp]
+\centering
+\includegraphics[scale=0.2]{images/testerSoftware}
+\caption{Testersoftware}
+\label{fig:SD Tester Software}
+\end{figure}
+
+	\vspace{5mm}
+	
+\subsection{Datenbank}
+Die Swissbit AG nutzt eine Microsoft \ac{SQL} Server. Es handelt sich hierbei relationelles Datenbankmanagementsystem. Um eine Verbindung zwischen Tester und Datenbank zu ermöglichen wurde mithilfe von Qt eine Bibliothek \textit{FlashDBLib} entwickelt. Diese bietet verschiedene Funktionen die \ac{SQL} Queries nutzt um Daten in die Datenbank zu schreiben oder aus der Datenbank zu lesen. Die stetige Weiterentwicklung erfordert sich mit entwickelnde Dokumentation. Realisiert wird dies durch die Dokumentationsoftware \textit{Doxygen}. Die Datenbank befindet sich auf einen lokalen Server und wird wöchentlich auf einen zweiten Server gespiegelt. Des weiteren werden die Datensätze permament auf einen zweiten Server geschrieben. Somit wird eine Ausfallsicherheit gewährleistet. Jede Tabelle in einer Datenbank besitzt einen Primär- und einen Fremdschlüssel die Abhängkeiten der verschiedenen Datensätze erstellen (Abb. 3.4). 
+\begin{figure}[!htbp]
+\centering
+\includegraphics[scale=0.8]{images/resultsdb}
+\caption{Ausschnitt der Abhängigkeiten ResultsDB}
+\label{fig:FlashDB - Results Datenbank}
+\end{figure}
+Die \textit{Products} Datenbank beinhaltet die Produktspezifikationen und belegt zum Zeitpunkt dieser Arbeit 185 MB Speicherplatz. Die \textit{Results} Datenbank beinhaltet die Testergebnisse und belegt zum Zeitpunkt dieser Arbeit 16 GB.
+\newpage
+
+\section{Schwachstellenanalyse}
+Der im vorherigen Kapitel beschriebene Ablaufprozess eines Testreports ist eine seit Jahren funktionierende Methode. Trotz der Routine vieler Mitarbeiter sind Fehler nicht immer zu vermeiden. Schaut man sich den Ablauf genauer an, ist schnell zu erkennen das der Mensch die Schwachstelle ist. Die Analyse ergab folgende Hauptfehlerquellen. 
+\begin{itemize}
+\item \textbf{Fehler beim Anlegen des Produktionsauftrages} \\
+Beim Erstellen eines Produktionsauftrag kann durch nicht korrekte Eingabe der Auftragsdaten ein falscher Produktionsauftrag entstehen Dies hat zur Folge, dass Testdaten z.B. unter einer falschen \ac{PA}-Nummer abgelegt werden und dann eventuell nicht mehr auffindbar sind.
+\item \textbf{Vertauschung von Speichermedien} \\
+Produktionsmitarbeiter kann durch Unachtsamkeit Speichermedien mit unterschiedlichen Produktionsaufträgen vertauschen. Dadurch würden die Testergebnisse verfälscht, da die Anforderungen und Spezifikation sich unterscheiden.
+\item \textbf{Fehler beim Erstellen des Testreports} \\
+Die Berechnung der Testzeit aus den Logfiles des \ac{CFSDMK} Tester kann falsch vorgenommen werden. Während der Eingabe der Informationen kann durch den Mitarbeiter ein Fehler gemacht werden. Zum Beispiel das Vertauschen von Zahlen oder eine Eingabe an einer falschen Position.
+\item \textbf{Erstellung nur durch TDEV Mitarbeiter} \\
+Nur ein Mitarbeiter der Testentwicklung hat das nötige Wissen um einen Testreport anzulegen. Dies schränkt die Anzahl der Personen, die dazu fähig sind, ein.
+\end{itemize}
+\newpage
+	
+\section{Soll Konzept}
+Die Anwendung soll in der Lage sein, durch die Eingabe eines Parameters einen Testreport automatisch zu erstellen. Die Darstellung des Testreports soll sich nicht sehr stark von der alten Darstellung unterscheiden. Das bedeutet, dass es auf den ersten Blick ersichtlich sein sollte das es sich um einen Testreport handelt (Abb 3.5). Die Bedienung des Progamms soll über eine \ac{GUI} möglich sein. Der Testreport soll durch eigene Kommentare ergänzt werden können.
+\begin{figure}[!htbp]
+\centering
+\includegraphics[scale=0.35]{images/testreport01}
+\caption{Muster Testreport}
+\label{fig:Testreport Muster}
+\end{figure}
+
+Die für den Testreport notwendigen Informationen sollen über das Webinterface der FlashDB und gegebenenfalls direkt von der \ac{SQL} Datenbank beschafft werden. In der Browserdarstellung sind viele Informationen zu einem Produktionsauftrag zusammengefasst, daher ist es sinnvoll diesen Vorteil zu nutzen und die Daten über das Web Frontend abzugreifen. Das Beschaffen der Testreport Daten ist auch direkt mittel \ac{SQL} Querys (Anfragen) möglich. Da dies durch die Abhängigkeiten der Datensätze zu sehr großen und komplexen Anfrageblöcken führen kann und die Ressourcen des Server durch diese stark beansprucht werden könnten, viel die Entscheidung auf das Web Frontend.
+\newpage
+
+\section{Lösungsansatz}
+Dieses Kapitel befasst sich mit einem ersten Ansatz zur Lösung der im Kapitel 3.3 gezeigten Vorgaben. Der Gedankenweg und Lösungsansatz soll verstanden und nachvollzogen werden können. Ziel ist eine effektive und sinnvole Lösung der gestellten Aufgabe zu erarbeiten.
+
+	\vspace{5mm}
+
+\subsection{Datenbeschaffung}
+Durch Reflexion des Studiums und der, während der Werkstudententätigkeit, gesammelten Erfahrungen wurden zwei Ideen entwickelt. Eine Methode diese zu erhalten, ist das Suchen nach bestimmten Stichworten. Dies hat jedoch den Nachteil, dass man davon ausgeht das bei jedem Produkt die Informationen immer unter dem gleichen Namen steht. So kann zum Beispiel nach einem Testschritt gesucht werden, um weitere Informationen wie zum Beispiel die Anzahl der Pass-Teile zu ermitteln. Dieser Ablauf ist in Abbildung 3.6 zu sehen.
+\begin{figure}[!htbp]
+\centering
+\includegraphics[scale=0.5]{images/ablauf01}
+\caption{Ablauf Informationsbeschaffung}
+\label{fig:Ablaufskizze}
+\end{figure}
+\\
+Verschiedene Produkte durchlaufen verschiedene Testschritte. Wird ein Testschritt gesucht der nicht durchgeführt wurde, kommt es zu fehlerhaften Informationen. Dieser Fall muss abgefangen werden. \\
+Eine zweite Möglichkeit ist die Suche nach so genannten Keywords im Quelltext der Webseite. Dies hat den Vorteil gegenüber der vorherigen Methode, dass nach bestimmten Tags, Tag-ID's oder Tag-Namen Kombinationen gesucht werden kann. Somit kann bei mehrfachen Vorkommen eines Wortes, eine bessere Unterscheidung zwischen diesen getroffen werden. Des weiteren können mit dieser Vorgehensweise nicht nur Informationen aus Tabellen geholt werden, sondern es kann der ganze Quelltext der Tabelle kopiert werden. Dies hat den Vorteil das die Struktur gleich ist, Fehler bei der Übertragung der Werte vermieden werden und die Implementierung simpler ist. Die so erhalteten Information werden als String Datentypen gespeichert. \\
+Noch dazu werden für Speichermedien, die den \textit{Preformat} Testschritt auf dem \ac{CFSDMK} Tester durchlaufen, Logfiles auf dem \textit{sbdesql01} Server gespeichert. Aus diesem Grund macht es Sinn, dass die Software anhand der \ac{PA}-Nummer den Server nach den zugehörigen Logfiles durchsucht. Die Fundstücke sollten temporär und lokal gespeichert werden um Ressourcen des Server zu sparen und den Datenverkehr im Netzwerk zu reduzieren.
+
+	\vspace{5mm}
+
+\subsection{Verarbeitung}
+Die gesammelten Informationen sollten auf Sinnhaftigkeit überprüft werden. Dies kann realisiert werden durch Funktionen, die bei Mengeninformationen überprüfen ob es sich um Zahlen handelt, Fehlerbeschreibungen untersuchen ob Buchstaben enthalten sind und bei Temperatur- oder Zeitangaben überprüfen ob die angegeben Einheiten mit den Werten zusammenpassen. Eine weitere Verarbeitungsfunktion ist die Verkettung oder Zerstückelung von Informationsstrings, da in manchen Strings mehrere Informationen enthalten sind. Dies ist im Testreport als Tabelle dargestellt, deswegen ist eine Zerstückelung beziehungsweise Aufteilung der Informationen in einzelne Strings sinnvoll (Abb. 3.7).
+\begin{figure}[!htbp]
+\centering
+\includegraphics[scale=0.7]{images/extempString}
+\caption{Temperaturtestschritt}
+\label{fig:Temperaturtestschritt}
+\end{figure}
+\\
+Die Inhalte der Logfiles werden für die Auswertung des Preformat Testschrittes auf dem \ac{CFSDMK} Tester benötigt, unter anderem werden mithilfe dieser die Testzeiten ermittelt als auch die verwendete Testersoftware und auf dem Speichermedium eingespielte Firmware. Eine Funktion ist notwendig, die erkennt bei welchem Inhalt es sich um Firmware handelt und an welcher Stelle ein Test beginnt und an welcher Stelle endet. Da jede Meldung im Logfile einen Zeitstempel hat, ist die Testzeitberechnung relativ einfach zu lösen. Es ist dabei zu beachten, dass bei Erkennung eines Fehlers, dieser gespeichert wird und die Testzeitberechnung beendet wird.
+
+	\vspace{5mm}
+	
+\subsection{Darstellung}
+Die Darstellung des Testreports soll übersichtlich und leicht verständlich sein. Als Vorlage dienen die existierenden Testreporte. Aufgrund einer möglichen Einbindung in das Web Frontend ist die Ausgabe in dem \ac{HTML} Dateiformat sinnvoll. Eine Auflistung in fünf Hauptkategorien ist vorgesehen.
+\begin{enumerate}
+\item \textbf{Verwendete Prüflinge} \\
+In einer Tabelle werden die Prüflinge aufgelistet, diese beinhaltet Type, Materialkurztext, Auftragsnummer, Startmenge, Liefermenge, Test-Yield. Somit hat der Leser einen Überblick.
+\item \textbf{Durchgeführte Tests} \\
+Hier werden die notwendigen Informationen der durchgeführten Test aufgelistet. Bei mehreren \ac{PA}'s werden diese, getrennt durch ihre Auftragsnummer, nacheinander aufgelistet.
+\item \textbf{Ermittelte Testzeiten} \\
+In Tabellenform werden die Testzeiten für die jeweiligen Testschritte dargestellt.
+\item \textbf{Testergebnisse} \\
+Fehler bei Testschritten werden in Tabellen aufgeführt.
+\item \textbf{Auswertung} \\
+Dem Ersteller wird hier die Möglichkeit gegeben eigene Kommentare einzufügen um Besonderheiten zu erwähnen.
+\end{enumerate}
+\newpage
+	
+\subsection{Handhabung}
+Die Ergonomie der Software soll so gestaltet werden, dass dem Benutzer der Gebrauch und Zweck auf Anhieb verständlich ist. Allgemein werden die in Kapitel 2.3 aufgelisteten Grundlagen der Mensch-Computer-Interaktion berücksichtigt. Es ist vorgesehen ein Hauptfenster zu gestalten und weitere Dialogfenster, dessen Aufbau sich nach dem der Microsoft Word Dokument Muster Vorlage richtet. Diese Dialogfenster sollem dem Benutzer eine gewohnte Darstellung der Informationen bieten und die Möglichkeit, Werte zu verändern gegebenenfalls zu korrigieren. Zu vermeiden ist eine verkomplizierung der Handhabung durch unnötige Einstellmöglichkeiten. Aus diesen Gründen ist es zweckmässig die Auswahlmöglichkeiten für den Nutzer zu beschränken und nur dann anzubieten wenn diese notwendig sind um eine zweckmässige Fortführung des Programms zu gewährleisten. \\
+Da es vorkommen kann, dass mehrere Produktionsaufträge zu einem Report zusammengefasst werden, ist eine Textfeld mit der Möglichkeit mehrere \ac{PA}-Nummern einzugeben praktisch. Dialogfenster, die zur Überprüfung der Werte dienen, sollten eine Möglichkeit haben, die Ausgabe ohne weitere Überprüfung zu ermöglichen.

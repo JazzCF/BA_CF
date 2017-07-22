@@ -1,0 +1,156 @@
+\chapter{Grundlagen}
+
+In diesem Kapitel werden die für diese Bachelorarbeit wichtigen Grundlagen erläutert. Der Übersichtlichkeitshalber gehe ich nur auf die für mein Projekt relevanten Bereiche ein.	
+
+\section{Qt}
+Dieser Abschnitt behandelt das GUI-Toolkit Qt. Da es sich bei Qt um ein sehr umfangreiches Framework handelt, wird hier nur auf die, für die Entwicklung des Programms, notwendigen Teilbereiche eingegangen. Eine Begründung warum die Entscheidung auf dieses Toolkit gefallen ist, erfolgt im Kapitel 3.4.	
+	
+\subsection{Definition}
+"Qt ist eine plattformunabhängige Entwicklungsumgebung für Desktop-PC, eingebettete und mobile Systeme. Unterstützt werden Linux, OS X, Windows,
+VxWorks, QNX, Android, iOS, Blackbarry, Sailfish OS und andere Plattformen. Qt ist keine Programmiersprache, sondern ein Framework, geschrieben in
+C++. Der Präprozessor Meta Object Compiler (MOC) erweitert die C++ Programmiersprache mit den neuen Features wie Signale und Slots. Vor dem
+Kompilierungsschritt analysiert der MOC die Quelldateien, die in erweitertem Qt-C++ geschrieben sind und erzeugt daraus standardkonforme C++ Quell-
+dateien. So kann das Framework selbst, aber auch die Anwendungen/Bibliotheken mit einem standardkonformen C++ Compiler wie Clang, GCC, ICC, MinGW
+und MSVC kompiliert werden." \cite{QtAbout}
+\newpage	
+	
+\subsection{Qt IDE - QtCreator}
+
+Die \ac{IDE} namens „QtCreator“ bietet viele bekannte Hilfen wie Syntax-Hervorhebung, Code-Vervollständigung, Debugger und eine Integration für alle gängigen Versionskontrollsystem wie zum Beispiel, git oder svn. 	
+	
+\subsection{Qt Build System}
+
+Qmake ist ein Tool welches hilft den Build-Prozess für verschiedene Plattformen zu vereinfachen. Es automatisiert die Generierung von makefiles sodass wenige Zeilen mit Informationen genügen um jedes Make-File zu kreiieren. Man kann dies für jedes Softwareprojekt nutzen, egal ob es mit Qt geschrieben wurde oder nicht. (vgl.\cite{QtQmake} \\
+Jedes Qt-Projekt besitzt eine .pro Datei, diese Projekt Datei beinhaltet die zu ladenden Module, Konfigurationseinstellungen, Header- und Source-Files. Qmake erstellt aus den Informationen der Projekt Datei ein Make-File. 
+Dieses Build-Tool bietet auch die Möglichkeit, Make-Dateien, die andere Make-Dateien rekursiv einbinden zu erstellen und zusätzlich noch bestimmte Eigenschaften in Abhängigkeit von der Zielplattform an- oder abzuschalten. (vlg. \cite{BS2009, S.219}) \\
+Eine Alternative zum Erstellen von Qt-Projekten bringt das plattformübergreifende make bzw. cmake Build-Management-Tool.	
+	
+\subsection{Signale und Slots}
+
+Der Signale und Slots Mechanismus ist das Hauptmerkmal von Qt. Es ist auch der Teil, der das Qt Framework am meisten von den anderen Frameworks unterscheidet. \cite{QtSAS} \\
+Jedes Element oder Objekt ist in der Lage miteinander zu kommunizieren. Dies funktioniert nach dem "Aktion = Reaktion" Prinzip. Es wird ein Button geklickt, also ein \ac{GUI} Element. Dieses sendet ein Signal aus und wird von einem Slot empfangen, der eine Funktion startet die zum Beispiel ein Menü öffnet.
+Es ist auch möglich ein Signal mehreren Empfängern und mehrere Signale einem Empfänger zu zuweisen (siehe Abb. \ref{fig:SignaleAndSlots}).
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.7\linewidth]{images/SignaleAndSlots}
+\caption[Signal-Slot-Konzept]{Signal-Slot-Konzept \cite[Web]{QtPic1}}
+\label{fig:SignaleAndSlots}
+\end{figure}
+Um diesen Mechanismus nutzen zu können, muss man in der Header Datei einer Klasse das Q\_\,Object Macro hinzufügen. Dies geschieht üblich vor dem Konstruktor. Funktionen die im Slot Block stehen werden in der Header Datei in einen 'private slot:' bzw. 'public slot:' Block geschrieben. Signale werden in einen 'signal' Block geschrieben.
+\begin{tabbing}
+links \= mitte \kill
+\emph{class Testklasse \{ } \\
+\> \emph{Q\_\,Object  }\\
+\emph{public: }\\
+\> \emph{Testklasse() {} }\\ \\
+\emph{public slots: }\\
+\> \emph{void Funktion() }\\ \\
+\emph{signals: }\\
+\> \emph{void abgeschicktesSignal(); }\\
+\emph{ 		\} }
+\end{tabbing}
+
+ Eine Verbindung ensteht mit folgender Syntax: \\ \\
+\textit{connect(SENDER, SIGNAL(abgeschicktesSignal()), EMPFÄNGER, SLOT(Funktion()));} \\ \\
+Ein großer Vorteil von Qt ist die automatische Trennung zwischen Sender und Empfänger wenn ein Objekt zerstört wird. Es ist aber auch möglich mit disconnect() eine Objekt Kommunikation manuell zu trennen.
+	
+\subsection{Qt's Module und Klassen}
+Qt Module sind Klassenbibliotheken, die je nach Bedarf in der Projektdatei eingefügt werden.\\
+Standartmäßig werden die Module Qt Core und Qt Gui für jedes Projekt zu Verfügung gestellt. \\
+Die nachfolgenden Aussagen beziehen sich auf die softwareeigene Dokumentation von Qt.
+	
+\subsubsection{QObject Klasse}
+"Die QObject Klasse ist die Basis Klasse für alle Qt Objekte."
+QObject ist das Herz von dem Qt Objekt Model. Die zentrale Eigenschaft in diesem Model, ist der sehr mächtige Mechanismus für die nahtlose Objektkommunikation genannt Signale und Slots." \cite{QtOB} \\
+Diese Klasse bietet eine Vielzahl von Funktionen die die Organisationstruktur deutlich macht z.B parent() oder children(). Erzeugte Objekte gliedern sich in eine Baumstruktur. Erstellt man ein QOjekt mithilfe eines anderen Objektes, so wird dieses automatisch zu Liste der Kinder des Objekts hinzugefügt. Eine Löschung des Elternobjekts zieht eine automatische Löschung der Kinderobjekte nach sich. 
+	
+\subsubsection{Qt WebEngine Modul}
+Das Qt WebEngine Modul bietet eine Webbrowser Engine die es einfach macht, Inhalte aus dem \ac{WWW} in Ihre Qt Applikation einzubetten. Qt WebEngine bietet C++ Klassen and \ac{QML} Typen für das Rendern von \ac{HTML}, \ac{XHTML}, und \ac{SVG} Dokumenten gestaltet mithilfe von \ac{CSS} und der Skriptsprache \ac{JS}. HTML Dokumente können vom Benutzer, über die Nutzung des „contenteditable“ (inhaltseditierbar) Attribute auf HTML Elemente, vollkommen editiert werden. Hierfür integriert die QtWebEngine Chromiums schnelle Web Möglichkeiten in Qt.
+Die Integration mit Qt fokusiert sich auf ein \ac{API} das einfach zu benutzen und dennoch erweiterbar ist. (vgl. \cite{QtWB})
+	
+\subsubsection{QXmlStreamWriter Klasse}
+
+"Diese Klasse bietet eine XML Dokumenten Schreiber mit einer simplen streaming \ac{API}." 
+\cite{QtXSW}
+Es ermöglicht einem mit einfachen und spezialisierten Funktionen ein XML Dokument zu erstellen. Dies kann zur halbautomatische Generierung von HTML Syntax genutzt werden. Generell beginnt jedes Dokument mit der writeStartDocument() Funktion und endet mit der writeEndDocument() Funktion. Diese und weitere Funktionen setzen die vom Benutzer eingegebenen Informationen in so genannte Tags. Tags können als Steuerelemente betrachtet werden, diese Elemente dienen zur Strukturierung von Texten oder Bildern.
+	
+\subsubsection{QFile Klasse}
+Die QFile Klasse ist ein \ac{IO} Gerät. Dieses hat den Zweck Text- oder Binärdateien zu lesen bzw zu schreiben. Der Dateinamen wird direkt im Konstruktor mit angegeben. Um Textdateien verarbeiten zu können, muss man QTextStream Klasse verwenden. Diese ermöglicht es den Datenstrom von der QFile Klasse zeilenweise, komplett oder bis zu einer bestimmten Länge zu lesen. (vgl. \cite{QtFL})
+	
+\subsubsection{Qt Sql}
+Wie alle Module, muss auch dieses in der Projekt Datei bekannt gemacht werden. Dies geschieht in dem man \textit{QT += sql} hinzufügt. Die \ac{SQL} \ac{API} ist in drei verschiedene Schichten aufgeteilt:
+\begin{itemize}
+\item Driver layer
+\item SQL API layer
+\item User interface layer
+\end{itemize}
+(vlg. \cite{QtSQL})
+	
+\subsection{Lizensierung}
+Softwarelizenzen nehmen eine wichtige Rolle in der Entwicklung von Programmen ein. Sie dienen dazu die Nutzung und Verbreitung einer Software zu regeln und die Rechte des Urhebers zu schützen. Lizenzen werden in zwei Kategorien unterteilt. Freie Software, auch Open Source Software genannt, und nicht freie Software, so genannte Endbenutzer-Lizenzvertrag Software \ac{EULA}. \\
+Qt bietet eine duale Linzenzierung. Die kommerzielle Lizenzierung ermöglicht Entwicklung und Vertrieb einer Software unter eigenen Bedingungen, wobei dann eine Gebühr an Qt fällig wird. Die Open Source Linzenzierung ist gegeben unter \ac{GPL} und \ac{LGPL}. Qt hat sich für \ac{LGPL} als primäre Open Source Lizenz aus folgenden Gründen entschieden:
+\begin{itemize}
+\item Die Freiheit das Programm für jeden Zweck auszuführen.
+\item Die Freiheit das Programm zu untersuchen und es auf spezielle Bedürfnisse anzupassen
+\item Die Freiheit das Programm weiterzuverteilen
+\item Die Freiheit das Programm zu verbessern und es der Öffentlichkeit zugänglich zu machen.
+\end{itemize}
+Somit ist es möglich eine proprietäre Software zu entwickeln, es müssen jedoch einige Lizenzvereinbarungen beachtet werden. 
+(vlg. \cite{QtLS})
+\newpage
+
+\section{HTML und XML}
+"Die Struktur von Webseiten wird durch die Auszeichnungssprache \ac{HTML} dargestellt. Der Name steht für Hypertext Markup Language (Auszeichnungssprache für Hyptertext, also Text mit integrierten Stukturinformationen und Querverweisen). HTML-Code sieht im Wesentlichen genauso aus wie [...] \ac{XML} - die gemeinsame Wurzel von \ac{XML} und \ac{HTML} ist die Auszeichnungssprache \ac{SGML}." \cite{SK2008, S.840} 
+	
+\subsection{HTML}
+Die Grundstuktur von \ac{HTML} Dokumenten ist immer gleich. Durch den öffnenden Tag \textit{<html>} und dem schließenden Tag \textit{</html>} wird das Dokument als \ac{HTML} gekennzeichnet. Nach dem öffnenden Tag kommt der Kopf, der so genannten Head \textit{<head>}, der Informationen wie z.B. den Titel enthält und dem Dokumentenkörper, Body, in dem sich der Inhalt befindet. \\
+Eine Textformatierung findet in HTML nicht statt. Der Inhalt der Dokumentes wird im Browser schlicht als Fließtext angezeigt. Möchte man einen Zeilenumbruch erzwingen oder eine Textpassage dick hervorheben, muss dies ebenfalls mit Tags realisiert werden. Eine weiter Fehlerquelle sind Sonderzeichen. Generell benutzt HTML die \ac{ASCII} Kodierung. Diese enthält die 128 weltweit gleichen Zeichen. Möchte man den für sein Land spezifischen Zeichensatz verwenden kann man dies im Head mit dem Meta-Tag\textit{<meta>} deklarieren, für die USA und Westeuropa ist dies \textit{iso-latin-1}, oder man benutzt Entity-Referenzen. Diese Entity-Refenzen sind eine Zeichenfolge die es ermöglichen bestimmt Sonderzeichen darzustellen. Möchte man zum Beispiel dem Umlaut ä darstellen so ist Entity-Referenz hierfür \textit{\&\,auml;} . \\
+Desweiteren gibt es die Möglichkeit Tags mit Eigenschaften zu versehen um Darstellung schöner zu gestalten. Eigenschaften könne Textausrichtung, Identifikationsnamen, Farben und Größenangaben wie Zoomfaktor bei Bildern sein. Die aktuelle HTML Version ist HTML5.1 .
+
+\subsection{XML}
+Bei dieser erweiterbaren Auszeichnungssprache handelt es sich nicht um ein bestimmtes Dokumentformat sonder im eine Metasprache die beliebige Auszeichnungssprachen definiert. Es kann sich dabei um Textdokumente, Vektorgrafiken, multimediale Präsentation, Datenbanken oder andere Arten von strukturierten Daten handeln. Der größte Vorteil von \ac{XML} ist, dass es sich um eine universelle Sprache handelt. Im Gegensatz zu LaTex, was zum Erstellen wissenschaftlichen Arbeiten dient, ist es bei \ac{XML} unerheblich um was für ein Dokument es sich handelt. Ebenso wie bei \ac{HTML} strukturiert diese Auszeichnungsspache nur die Daten, eine Formatierung kann durch eine zusätzliche Formatierungssprache, wie zum Beispiel \ac{CSS}, vorgenommen werden. (vgl. \cite{SK2008, S.769/S.770}) Der Aufbau dieses Dokumentes ähnelt dem \ac{HTML} sehr. \\ "Jedes XML-Dokument besteht aus einer Hierarchie ineinander verschachtelter Steuerungsanweisungen, die als Element oder Tags bezeichnet werden, und kann zusätzlich einfachen Text enthalten." \cite{SK2008, S.771} \\
+Der erste Tag in einem Dokument definiert den Dokumenttyp. Dies geschieht hier mit folgender Syntax: \textit{<?xml version="1.0" \,encoding=\"utf-8"?>} \\
+Nun da der Dokumentyp als XML definiert wurde, kann man seinen Informationen in Tags stukturieren die selbst benannt werden z.B. \textit{<automarke>Audi</automarke>} . Somit haben wir die Informationen \textit{Audi} dem Tag \textit{automarke} zugewiesen. Ein anderes Programm kann nun beim Lesen des Dokumentes erkennen, dass es sich bei Audi um eine Automarke handelt.
+
+\section{GUI Gestaltung}
+Die \ac{GUI}, also die grafische Benutzeroberfläche ist die Schnittstelle zwischen dem Computerprogramm und dem Benutzer. Sie dient der Steuerung des Programms durch grafische Bedienelemente. Für die Gestaltung einer Oberfläche gibt es eine internationale Standard Richtlinie, die Norm \textbf{EN ISO 9241}. \\
+"Die Normenreihe beschreibt Anforderungen an die Arbeitsumgebung, Hardware und Software. Ziel der Richtlinie ist es, gesundheitliche Schäden beim Arbeiten am Bildschirm zu vermeiden und dem Benutzer die Ausführung seiner Aufgaben zu erleichtern." \cite{WK9241} \\
+Die sieben wichtigsten Grundlagen zur Dialoggestaltung finden sich in der Norm EN ISO 9241-110 und lauten:
+\begin{enumerate}
+\item \textbf{Aufgabenangemessenheit} \\
+Die Gestaltung sollte möglichst einfach gehalten werden, damit der Benutzer nicht unnötig verwirrt wird. Die Bedienung sollte als Ziel eine Vereinfachung des Arbeitsaufwandes als Ziel haben.
+\item \textbf{Seblstbeschreibungsfähigkeit} \\
+Die Oberfläche sollte dem User ausreichend Sinn und Nutzung des Programmes erklären.
+\item \textbf{Erwartungskonformität} \\
+Durch Konsistenz sollte dem Benutzer eine gewohnte Bedienbarkeit gegeben werden.
+\item \textbf{Lernförderlichkeit} \\
+Mithilfe weniger Erläuterungen sollte dem Benutzer eine schnellstmögliche Bedienung gewährleistet werden.
+\item \textbf{Steuerbarkeit} \\
+Die Steuerung durch den User sollte möglich sein.
+\item \textbf{Fehlertoleranz} \\
+Das Programm sollte den Benutzer durch Korrektur oder Hinweise möglicher Fehler bei der Eingabe unterstützen.
+\item \textbf{Individualisierbarkeit} \\
+Eine Anpassung auf spezifische Anforderungen des Benutzer sollte möglich sein.
+\end{enumerate}
+Mithilfe dieser Regeln ist es dem Benutzer möglich schnell neue Programme zu bedienen. \\
+Die Bedien- bzw. Steuerungselemente einer \ac{GUI} werden \textbf{Widgets} gennant. Dieses Wort wurde aus den englischen Wörtern \textit{Window}, Fenster, und \textit{Gadget}, Gerät, zusammengesetzt. \newpage
+Man unterscheidet zwei Arten von Widgets. \\ \\
+\textbf{Einfache Widgets:}
+\begin{itemize}
+\item Fenster und Menüs
+\item Buttons
+\item Checkboxen
+\item Combo- und Listboxen
+\item Radiobuttons
+\item Textfelder
+\end{itemize}
+\textbf{Komplexe Widgets:}
+\begin{itemize}
+\item Tabellen
+\item DateTime-Picker
+\item Öffnen-, Speichern-Dialoge
+\item Symbolleisten
+\item TreeViews
+\item Selbst erstellte Widgets
+\end{itemize}
+(vlg. \cite{MF9783})

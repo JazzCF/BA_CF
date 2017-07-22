@@ -1,0 +1,2 @@
+C:\Users\konstantin.linker\Desktop\dbus-sharp-0.8.1\tools\obj\Debug\dbus-monitor.csprojResolveAssemblyReference.cache
+C:\Users\konstantin.linker\Desktop\dbus-sharp-0.8.1_1\tools\obj\Debug\dbus-monitor.csprojResolveAssemblyReference.cache

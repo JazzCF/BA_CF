@@ -1,0 +1,89 @@
+\chapter{Realisierung}
+
+\section{Randbedingungen}
+Allgemein kann gesagt werden, dass für die Realisierung dieses Projektes sehr viel Freiheiten gewährt wurden. Es wurden lediglich ein paar Bedingungen vorgegeben. Wichtig ist das Ergebnis.
+
+\subsection{Musskriterien}
+Der Testreport-Generator muss plattformunabhängig sein. Die in der Swissbit AG hauptsächlich benutzten Betriebssysteme sind Mircrosoft Windows 7, Microsoft Windows 8 und Linux. Für alle soll die Software kompilierbar und ausführbar sein. Die Programmiersprache muss C++ sein und es soll mit dem GUI-Toolkit Qt entwickelt werden. Die Entwicklung muss selbständigt geschehen. Das Einholen der Information muss über das Web Interface der FlashDB Datenbank realisiert werden. Die Software muss in der Lage sein, mehrere Produktionsaufträge verarbeiten zu können. Das Erstellen des Testreports muss erheblich weniger Aufwand benötigen als die bisherige Lösung. Außerdem muss die Informationsbeschaffung automatisiert von statten gehen. Es ist notwendig die Inhalte auf ihre Richtigkeit zu überprüfen. Das Programm soll in einer ausführbaren Form vorliegen, das heißt es soll selbständig funktionsfähig sein.
+	
+\subsection{Wunschkriterien}
+Optional soll die Ausgabe des Testreports noch im Microsoft Word Dateiformat erfolgen. Um Benutzerfreundlichkeit zu gewähren, soll ein Installationsprogramm die Software mit den zugehörigen Bibliotheken benutzerfreundlich in das System integrieren. Für eine bessere Nachvollziehbarkeit sollten die Arbeitsschritte der Software erkennbar sein.
+
+%\subsection{Abgrenzungskriterien}
+
+\section{Entwurf der Qt-Anwendung}
+In diesem Abschnitt wird der Entwurf des Softwareprojektes vorgestellt. Die Entwurfsplanung orientiert sich an den zwei Qt-Softwareprojekten die bereits verwirklicht wurden. Eine Vorgehensweise nach dem \textit{Scrum} Softwareentwicklungsprinzip wurde nicht angewandt, da das Entwicklerteam nur aus einer Person besteht und diese Vorgehensweise erst ab einer Teamgröße von mehreren Personen überzeugend ist.
+	
+\subsection{Funktionieller Entwurf der Qt-Anwendung}
+Der Testreport Generator fordert zunächst auf, \ac{PA}-Nummer(n) einzugeben. Da nicht bei jedem Arbeitsplatz die Netzlaufwerkverbindung zu dem Server \textit{sbdesql01} mit dem gleichen Laufwerksbuchstaben besteht, öffnet sich ein Dialog Fenster. Dieses fordet auf, den Ordner mit den Logfiles des \ac{CFSDMK} auszuwählen. Die Suche nach den benötigten Dateien beginnt in einem neuem Thread, dies ist sinnvoll um ein Abbrechen und Beenden der Anwendung auf während der Suche zu ermöglichen
+. \\
+Nach Beendigung der Suche öffnet sich in der Anwendung ein Browser um eine Verbindung zum Web Frontend der FlashDB-Datenbank herzustellen. Benutzername und Passwort sind im Quelltext der Anwendung hinterlegt und können nur dort verändert werden. Der Benutzer hat nur das Recht lesend auf das WebInterface der flashdb-Datenbank zuzugreifen. Es folgt eine automatisierte Anfrage. Webseiten, die benötigte Informationen enthalten, werden lokal und temporär als HTML-Datei (Quelltext) und als Plaintext-Datei (Fließtext) gespeichert. Dies wird aus folgenden zwei Gründen gemacht:
+\begin{itemize}
+\item \textbf{Weiternavigation} \\
+Da nicht jeder Link auf einer Webseite eine Tag-ID besitzt, wodurch er eindeutig identifizierbar und mithilfe spezieller Funktionen erreichbar ist. Werden Quelltextdateien gespeichert, die dann durch selbst entwickelter Algorithmen nach weiterzuverfolgenden Links durchsucht werden. 
+\item \textbf{Informationssammlung} \\
+Die Qt-Anwendung durchsucht die Fließtextdateien nach benötigten Informationen und übergibt sie bei erfolgreicher Suche dem Programm.
+\end{itemize}
+Falls für den Preformat Testschritt keine Firmware gefunden werden kann, wird ein SQL-Verbindung zur ProductsDB-Datenbank hergestellt um nach dem Firmwarenamen und der Firmwareversion zu suchen. Die Loginparameter für die SQL-Verbindung sind ebenfalls im Quelltext hinterlegt, ebenso wie bei der Browserdarstellung ist nur einer lesender Zugriff gestattet. Das Erscheinen eines neuen Fenster, mit der Ansicht über den verwendeten Prüfling, zeigt an das die Informationsbeschaffung beendet ist. Die Anwendung bietet nun drei Möglichkeiten fortzufahren. Der \textbf{"BACK"}-Button, bringt den Nutzer zum vorherigen Dialog. \textbf{"NEXT"}-Button navigiert zum nächsten Dialogfenster. Eine Besonderheit hierbei ist, dass nur Dialogfenster angezeigt werden die auch Werte enthalten. Unnötiges weiterklicken wird damit unterbunden. \textbf{"FINISH"}-Button überspringt alle folgenden Dialogfenster. In dem Dialogfenster \textit{Testreport Generator - Site6} das die Testzeiten der Testschritte präsentiert, blendet nicht durchgeführte Testschritte aus. Am Ende wird ein Testreport unter der Produktionsauftragsnummer im \ac{HTML}-Dateiformat abgespeichert. Sollten noch nicht abgearbeite \ac{PA}'s existieren, wiederholt sich der Vorgang bis alle abgearbeitet wurden. Nach dem letzten Testreport, wird eine Funktion aufgerufen die alle Testreporte zu einem zusammenfasst. \\
+Um eine negative Beeinflussung in Form von Ressourcenbelegung oder Datenmanipulation zu vermeiden, wird das Softwareprojekt mit der Sicherungskopie des Web Frontend \textit{flashdb-dev} und der \textit{development}-Datenbank arbeiten.
+In Abbildung 4.1 ist der funktionelle Ablauf der Qt-Anwendung skizziert. Je dicker ein Pfeil, desto mehr Informationen enthält der Datenstrom.
+
+\begin{figure}[H]
+\includegraphics[scale=0.44]{images/funktionell}
+\caption{Funktioneller Entwurf}
+\label{fig:Entwurf funktioneller Ablauf}
+\end{figure}
+
+Des weiteren sollte jede Eingabe und Übergabe von Werten auf Ihre Richtigkeit überprüft werden, dies geschieht mit eigens dafür entwickelten Algorithmen. 
+Bei Produktionsauftragsnummern wird kontrolliert ob es sich um eine reine Zahlenkombinatione handelt und ob diese acht Stellen hat. Bei der Datenübergabe ist es wichtig diese ebenfalls nach bestimmtem Kriterien zu untersuchen. Jede Information wird als \textit{QString} übergeben, da Qt viele Funktionen anbietet diese zu untersuchen. Eine Außnahme ist die Testzeitdauerberechnung, nach der Berechnung wird der Datentyp Integer zu QString umgewandelt. 
+Die Darstellungsform des \ac{LTM} wird wegen besserer Eingängkeit beibehalten (Abb 4.2).
+
+\begin{figure}[H]
+\includegraphics[scale=0.22]{images/ltm_gui}
+\caption{Funktioneller Entwurf}
+\label{fig:Entwurf funktioneller Ablauf}
+\end{figure}
+
+
+\subsection{Klassenentwurf}
+Das \ac{UML} Klassendiagramm ist kompakt gehalten und zeigt zur besseren Übersicht nur die wichtigsten Funktionen und Klassen (Abb. 4.3).
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.7]{images/uml_terege}
+\caption{Klassendiagramm Testreport-Generator}
+\label{fig:Klassendiagramm Testreport-Generator}
+\end{figure}
+Die \textit{MainWindow} Klasse ist die Verwaltungsklasse. Sie kümmert sich um die ordnungsgemäße Abfolge und den Transport der Daten zwischen den Klassen. Infotable ist der Zwischenhändler der Info-Getter, dies sind Funktionen die Informationen einholen.
+
+\subsection{Benutzeroberflächenentwurf}
+Das \ac{GUI} Design richtet sich nach den Vorgaben der \textbf{EN ISO 9241} Norm. Qt bietet ein Tool, namens Qt-Designer, zur \ac{GUI} Gestaltung. Es ermöglicht ein Zusammenstellen verschiedener Widgets mittels \textit{Drag and Drop}. \\
+Das Hauptfenster der Anwendung ist schlicht gestaltet. Das linke Textfeld ist das Eingabefeld indem die \ac{PA} Nummern eingegeben werden (Abb. 4.4). Das rechte Textfeld ist ein Textbrowser dessen Zweck eine Statusanzeige ist.
+\begin{figure}[!htbp]
+\centering
+\includegraphics[scale=0.7]{images/mainwindow}
+\caption{Hauptfenster Testreport Generator}
+\label{fig:Hauptfenster Testreport Generator}
+\end{figure}
+Die sich im unteren Abschnitt befindliche Fortschrittsanzeige, dient einmal der Anzeige des Fortschritts und um feststellen zu können ob sich das Programm aufgehängt hat. Wenn sich keine Animation der Fortschrittsanzeige zu erkennen ist, hat sich die Anwendung aufgehängt. Der \textit{Exit}-Button beendet das Programm, auch während des Suchvorgangs. Der \textit{Start}-Button startet die Generierung des Testreports. \\
+Die Kontrollfenster sind nach der Testreport Vorlage gestaltet. Dies führt dazu, dass die gewohnte Informationsdarstellung gegeben ist und dadurch alles auf einen Blick ersichtlich ist (Abb. 4.5).
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.4]{images/guiSite1}
+\caption{Informationsdarstellung - Anwendung/Word Vorlage}
+\label{fig:Informationsdarstellung GUI}
+\end{figure}
+Das Texteingabefeld in Abbildung 4.5 dient als Kommentarmöglichkeit. Diese Kommentare werden unter der entsprechenden Hauptkategorie angehangen. Ferner ist jede Information editierbar. Der Kopf des Testreport Generators besteht aus drei nebeneinander angeordneten Labels. Das erste Label ist der Platzhalter für das Firmenlogo. In der Mitte steht die Bezeichnung der Entwicklungsteile und im dritten Label der Titel.
+
+\section{Implementierung}
+
+\subsection{Entwicklungsumgebung und andere Komponenten}
+
+\subsection{Projekte und Dateien}
+
+\subsection{Webinterface}
+
+\subsection{FlashDB}
+
+\subsection{Datenverarbeitung}
+
+\subsection{GUI Design}

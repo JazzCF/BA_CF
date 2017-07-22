@@ -1,0 +1,12 @@
+C:\Users\konstantin.linker\Desktop\dbus-sharp-0.8.1\src\obj\Debug\dbus-sharp.dll
+C:\Users\konstantin.linker\Desktop\dbus-sharp-0.8.1\src\obj\Debug\dbus-sharp.pdb
+C:\Users\konstantin.linker\Desktop\dbus-sharp-0.8.1\src\dbus-sharp.dll
+C:\Users\konstantin.linker\Desktop\dbus-sharp-0.8.1\src\dbus-sharp.pdb
+C:\Users\konstantin.linker\Desktop\dbus-sharp-0.8.1\src\mono.posix.dll
+C:\Users\konstantin.linker\Desktop\dbus-sharp-0.8.1\src\obj\Debug\dbus-sharp.csprojResolveAssemblyReference.cache
+C:\Users\konstantin.linker\Desktop\dbus-sharp-0.8.1_1\src\obj\Debug\dbus-sharp.dll
+C:\Users\konstantin.linker\Desktop\dbus-sharp-0.8.1_1\src\obj\Debug\dbus-sharp.pdb
+C:\Users\konstantin.linker\Desktop\dbus-sharp-0.8.1_1\src\dbus-sharp.dll
+C:\Users\konstantin.linker\Desktop\dbus-sharp-0.8.1_1\src\dbus-sharp.pdb
+C:\Users\konstantin.linker\Desktop\dbus-sharp-0.8.1_1\src\mono.posix.dll
+C:\Users\konstantin.linker\Desktop\dbus-sharp-0.8.1_1\src\obj\Debug\dbus-sharp.csprojResolveAssemblyReference.cache

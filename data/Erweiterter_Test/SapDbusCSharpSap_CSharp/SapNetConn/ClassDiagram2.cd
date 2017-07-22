@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="SapNetConn.DestConfig" BaseTypeListCollapsed="true">
+    <Position X="4.5" Y="2.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAEAAAAAAAAAAAAAAAAAAAAAIEAAAAAAgAEAAAA=</HashCode>
+      <FileName>DestConfig.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.1" />
+  </Class>
+  <Class Name="SapNetConn.Program">
+    <Position X="2" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SapNetConn.SapServerQuery" BaseTypeListCollapsed="true">
+    <Position X="11.25" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABBAAAAEAAIAgIAAACAAAgAAAAAAAAAAAAAAEAAAQAA=</HashCode>
+      <FileName>SapQuery.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Orientation="Left" Position="0.455" />
+  </Class>
+  <Interface Name="ifaceServer">
+    <Position X="8.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABBAAAAAAAIAAIAAAAAAAAAAAAAAAAAAAAAAEAAAQAA=</HashCode>
+      <FileName>IFace.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

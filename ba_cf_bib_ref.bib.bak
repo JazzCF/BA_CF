@@ -1,0 +1,165 @@
+% Encoding: UTF-8
+
+@Book{BS2009,
+  title     = {C++ GUI Programmierung mit Qt4},
+  publisher = {Addison Wesley Verlag},
+  year      = {2009},
+  author    = {Jasmin Blachette, Mark Summerfield},
+  edition   = {2-te Auflage},
+  isbn      = {978-3-8273-2729-1},
+  note      = {ISBN 978-3-8273-2729-1},
+  owner     = {Christoph, Franke},
+  timestamp = {10.07.2017},
+  url       = {https://www.amazon.com/GUI-Programmierung-mit-Qt/dp/3827327296?SubscriptionId=0JYN1NVW651KCA56C102&tag=techkie-20&linkCode=xm2&camp=2025&creative=165953&creativeASIN=3827327296},
+}
+
+@Electronic{Swissbit2017,
+  author    = {Swissbit},
+  month     = {07},
+  year      = {2017},
+  title     = {Swissbit About Us},
+  language  = {EN},
+  url       = {https://swissbit.com/company/about-us-2/},
+  date      = {2017-07-10},
+  day       = {10},
+  owner     = {Christoph, Franke},
+  timestamp = {10.07.2017},
+}
+
+@Electronic{QtAbout,
+  author       = {Qt},
+  month        = {07},
+  year         = {2017},
+  title        = {Qt - About Qt},
+  language     = {EN},
+  organization = {Qt},
+  url          = {http://wiki.qt.io/About_Qt},
+}
+
+@Electronic{QtQmake,
+  author       = {Qt},
+  month        = {07},
+  year         = {2017},
+  title        = {Qt - qmake},
+  language     = {EN},
+  organization = {Qt},
+  url          = {http://doc.qt.io/qt-4.8/qmake-manual.html},
+}
+
+@Electronic{QtWB,
+  author       = {Qt},
+  month        = {07},
+  year         = {2017},
+  title        = {Qt - QtWebEngine},
+  language     = {EN},
+  organization = {Qt},
+  url          = {http://doc.qt.io/qt-5/webengine-overview.html
+https://wiki.qt.io/QtWebEngine},
+}
+
+@Electronic{QtXSW,
+  author   = {Qt},
+  month    = {07},
+  year     = {2017},
+  title    = {Qt - QXmlStreamWriter Klasse},
+  language = {EN},
+  url      = {http://doc.qt.io/qt-4.8/qxmlstreamwriter.html},
+}
+
+@Electronic{QtSAS,
+  author       = {Qt},
+  month        = {07},
+  year         = {2017},
+  title        = {Qt - Signals and Slots},
+  language     = {EN},
+  organization = {Qt},
+  url          = {http://doc.qt.io/qt-4.8/signalsandslots.html},
+}
+
+@Electronic{QtOB,
+  author       = {Qt},
+  month        = {07},
+  year         = {2017},
+  title        = {Qt - QObject},
+  language     = {EN},
+  organization = {Qt},
+  url          = {http://doc.qt.io/qt-5/qobject.html#details},
+}
+
+@Electronic{QtPic1,
+  author       = {Qt},
+  month        = {07},
+  year         = {2017},
+  title        = {Qt - Bild Signale und Slots},
+  organization = {Qt},
+  url          = {http://doc.qt.io/qt-4.8/images/abstract-connections.png},
+}
+
+@Article{LM09,
+  author  = {Alexander Nassian},
+  title   = {Richtig verbinden},
+  journal = {Linux-Magazin},
+  year    = {2009},
+  month   = {09},
+}
+
+@Electronic{QtFL,
+  author       = {Qt},
+  month        = {07},
+  year         = {2017},
+  title        = {Qt - QFile},
+  language     = {EN},
+  organization = {Qt},
+  url          = {http://doc.qt.io/qt-5/qfile.html},
+}
+
+@Book{SK2008,
+  title     = {IT-Handbuch für Fachinformatiker},
+  publisher = {Galileo Press},
+  year      = {2008},
+  author    = {Sascha Kersken},
+  isbn      = {978-3-8362-1015-7},
+}
+
+@Electronic{WK9241,
+  month = {07},
+  year  = {2017},
+  title = {EN ISO 9241},
+  url   = {https://de.wikipedia.org/wiki/EN_ISO_9241#EN_ISO_9241-11_Anforderungen_an_die_Gebrauchstauglichkeit},
+}
+
+@Book{MF9783,
+  title     = {Vergleich von Cross-Platform GUI-Toolkits},
+  publisher = {VDM Verlag},
+  year      = {2010},
+  author    = {Fuchs, Matthias},
+  isbn      = {978-3-639-25164-7},
+  date      = {2010-04-11},
+  ean       = {9783639251647},
+  pagetotal = {120},
+  url       = {http://www.ebook.de/de/product/11183399/matthias_fuchs_vergleich_von_cross_platform_gui_toolkits.html},
+}
+
+@Electronic{QtLS,
+  author       = {Qt},
+  month        = {07},
+  year         = {2017},
+  title        = {Qt - Lizenz},
+  language     = {En},
+  organization = {Qt},
+  url          = {https://www.qt.io/qt-licensing-terms/},
+}
+
+@Electronic{QtSQL,
+  author       = {Qt},
+  month        = {07},
+  year         = {2017},
+  title        = {Qt - Qt Sql},
+  language     = {En},
+  organization = {Qt},
+  url          = {http://doc.qt.io/qt-5/qtsql-index.html},
+}
+
+@Comment{jabref-meta: databaseType:bibtex;}
+
+@Comment{jabref-meta: fileDirectory:/home/chris/mntpts/DATA/Documents/HTW/bachelorarbeit/BachelorVorlageLatex;}

@@ -1,0 +1,406 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 2.8 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated as
+% required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+\sortlist[entry]{anyt/global/}
+  \entry{MF9783}{book}{}
+    \name{author}{1}{}{%
+      {{hash=FM}{%
+         family={Fuchs},
+         familyi={F\bibinitperiod},
+         given={Matthias},
+         giveni={M\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {VDM Verlag}%
+    }
+    \strng{namehash}{FM1}
+    \strng{fullhash}{FM1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{Fuc10}
+    \field{sortinit}{F}
+    \field{sortinithash}{F}
+    \field{isbn}{978-3-639-25164-7}
+    \field{pagetotal}{120}
+    \field{title}{Vergleich von Cross-Platform GUI-Toolkits}
+    \verb{url}
+    \verb http://www.ebook.de/de/product/11183399/matthias_fuchs_vergleich_von_
+    \verb cross_platform_gui_toolkits.html
+    \endverb
+    \field{day}{11}
+    \field{month}{04}
+    \field{year}{2010}
+    \warn{\item Can't use 'date' + 'year'}
+  \endentry
+
+  \entry{BS2009}{book}{}
+    \name{author}{1}{}{%
+      {{hash=JBMS}{%
+         family={Jasmin\bibnamedelima Blachette},
+         familyi={J\bibinitperiod\bibinitdelim B\bibinitperiod},
+         given={Mark\bibnamedelima Summerfield},
+         giveni={M\bibinitperiod\bibinitdelim S\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Addison Wesley Verlag}%
+    }
+    \strng{namehash}{JBMS1}
+    \strng{fullhash}{JBMS1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{JB09}
+    \field{sortinit}{J}
+    \field{sortinithash}{J}
+    \field{edition}{2-te Auflage}
+    \field{isbn}{978-3-8273-2729-1}
+    \field{note}{ISBN 978-3-8273-2729-1}
+    \field{title}{C++ GUI Programmierung mit Qt4}
+    \verb{url}
+    \verb https://www.amazon.com/GUI-Programmierung-mit-Qt/dp/3827327296?Subscr
+    \verb iptionId=0JYN1NVW651KCA56C102&tag=techkie-20&linkCode=xm2&camp=2025&c
+    \verb reative=165953&creativeASIN=3827327296
+    \endverb
+    \field{year}{2009}
+  \endentry
+
+  \entry{SK2008}{book}{}
+    \name{author}{1}{}{%
+      {{hash=KS}{%
+         family={Kersken},
+         familyi={K\bibinitperiod},
+         given={Sascha},
+         giveni={S\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Galileo Press}%
+    }
+    \strng{namehash}{KS1}
+    \strng{fullhash}{KS1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{Ker08}
+    \field{sortinit}{K}
+    \field{sortinithash}{K}
+    \field{isbn}{978-3-8362-1015-7}
+    \field{title}{IT-Handbuch für Fachinformatiker}
+    \field{year}{2008}
+  \endentry
+
+  \entry{QtAbout}{online}{}
+    \name{author}{1}{}{%
+      {{hash=Q}{%
+         family={Qt},
+         familyi={Q\bibinitperiod},
+      }}%
+    }
+    \list{language}{1}{%
+      {EN}%
+    }
+    \list{organization}{1}{%
+      {Qt}%
+    }
+    \strng{namehash}{Q1}
+    \strng{fullhash}{Q1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{Qt17}
+    \field{extraalpha}{1}
+    \field{sortinit}{Q}
+    \field{sortinithash}{Q}
+    \field{title}{Qt - About Qt}
+    \verb{url}
+    \verb http://wiki.qt.io/About_Qt
+    \endverb
+    \field{month}{07}
+    \field{year}{2017}
+  \endentry
+
+  \entry{QtPic1}{online}{}
+    \name{author}{1}{}{%
+      {{hash=Q}{%
+         family={Qt},
+         familyi={Q\bibinitperiod},
+      }}%
+    }
+    \list{organization}{1}{%
+      {Qt}%
+    }
+    \strng{namehash}{Q1}
+    \strng{fullhash}{Q1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{Qt17}
+    \field{extraalpha}{2}
+    \field{sortinit}{Q}
+    \field{sortinithash}{Q}
+    \field{title}{Qt - Bild Signale und Slots}
+    \verb{url}
+    \verb http://doc.qt.io/qt-4.8/images/abstract-connections.png
+    \endverb
+    \field{month}{07}
+    \field{year}{2017}
+  \endentry
+
+  \entry{QtLS}{online}{}
+    \name{author}{1}{}{%
+      {{hash=Q}{%
+         family={Qt},
+         familyi={Q\bibinitperiod},
+      }}%
+    }
+    \list{language}{1}{%
+      {En}%
+    }
+    \list{organization}{1}{%
+      {Qt}%
+    }
+    \strng{namehash}{Q1}
+    \strng{fullhash}{Q1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{Qt17}
+    \field{extraalpha}{3}
+    \field{sortinit}{Q}
+    \field{sortinithash}{Q}
+    \field{title}{Qt - Lizenz}
+    \verb{url}
+    \verb https://www.qt.io/qt-licensing-terms/
+    \endverb
+    \field{month}{07}
+    \field{year}{2017}
+  \endentry
+
+  \entry{QtFL}{online}{}
+    \name{author}{1}{}{%
+      {{hash=Q}{%
+         family={Qt},
+         familyi={Q\bibinitperiod},
+      }}%
+    }
+    \list{language}{1}{%
+      {EN}%
+    }
+    \list{organization}{1}{%
+      {Qt}%
+    }
+    \strng{namehash}{Q1}
+    \strng{fullhash}{Q1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{Qt17}
+    \field{extraalpha}{4}
+    \field{sortinit}{Q}
+    \field{sortinithash}{Q}
+    \field{title}{Qt - QFile}
+    \verb{url}
+    \verb http://doc.qt.io/qt-5/qfile.html
+    \endverb
+    \field{month}{07}
+    \field{year}{2017}
+  \endentry
+
+  \entry{QtQmake}{online}{}
+    \name{author}{1}{}{%
+      {{hash=Q}{%
+         family={Qt},
+         familyi={Q\bibinitperiod},
+      }}%
+    }
+    \list{language}{1}{%
+      {EN}%
+    }
+    \list{organization}{1}{%
+      {Qt}%
+    }
+    \strng{namehash}{Q1}
+    \strng{fullhash}{Q1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{Qt17}
+    \field{extraalpha}{5}
+    \field{sortinit}{Q}
+    \field{sortinithash}{Q}
+    \field{title}{Qt - qmake}
+    \verb{url}
+    \verb http://doc.qt.io/qt-4.8/qmake-manual.html
+    \endverb
+    \field{month}{07}
+    \field{year}{2017}
+  \endentry
+
+  \entry{QtOB}{online}{}
+    \name{author}{1}{}{%
+      {{hash=Q}{%
+         family={Qt},
+         familyi={Q\bibinitperiod},
+      }}%
+    }
+    \list{language}{1}{%
+      {EN}%
+    }
+    \list{organization}{1}{%
+      {Qt}%
+    }
+    \strng{namehash}{Q1}
+    \strng{fullhash}{Q1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{Qt17}
+    \field{extraalpha}{6}
+    \field{sortinit}{Q}
+    \field{sortinithash}{Q}
+    \field{title}{Qt - QObject}
+    \verb{url}
+    \verb http://doc.qt.io/qt-5/qobject.html#details
+    \endverb
+    \field{month}{07}
+    \field{year}{2017}
+  \endentry
+
+  \entry{QtSQL}{online}{}
+    \name{author}{1}{}{%
+      {{hash=Q}{%
+         family={Qt},
+         familyi={Q\bibinitperiod},
+      }}%
+    }
+    \list{language}{1}{%
+      {En}%
+    }
+    \list{organization}{1}{%
+      {Qt}%
+    }
+    \strng{namehash}{Q1}
+    \strng{fullhash}{Q1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{Qt17}
+    \field{extraalpha}{7}
+    \field{sortinit}{Q}
+    \field{sortinithash}{Q}
+    \field{title}{Qt - Qt Sql}
+    \verb{url}
+    \verb http://doc.qt.io/qt-5/qtsql-index.html
+    \endverb
+    \field{month}{07}
+    \field{year}{2017}
+  \endentry
+
+  \entry{QtWB}{online}{}
+    \name{author}{1}{}{%
+      {{hash=Q}{%
+         family={Qt},
+         familyi={Q\bibinitperiod},
+      }}%
+    }
+    \list{language}{1}{%
+      {EN}%
+    }
+    \list{organization}{1}{%
+      {Qt}%
+    }
+    \strng{namehash}{Q1}
+    \strng{fullhash}{Q1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{Qt17}
+    \field{extraalpha}{8}
+    \field{sortinit}{Q}
+    \field{sortinithash}{Q}
+    \field{title}{Qt - QtWebEngine}
+    \verb{url}
+    \verb http://doc.qt.io/qt-5/webengine-overview.html https://wiki.qt.io/QtWe
+    \verb bEngine
+    \endverb
+    \field{month}{07}
+    \field{year}{2017}
+  \endentry
+
+  \entry{QtXSW}{online}{}
+    \name{author}{1}{}{%
+      {{hash=Q}{%
+         family={Qt},
+         familyi={Q\bibinitperiod},
+      }}%
+    }
+    \list{language}{1}{%
+      {EN}%
+    }
+    \strng{namehash}{Q1}
+    \strng{fullhash}{Q1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{Qt17}
+    \field{extraalpha}{9}
+    \field{sortinit}{Q}
+    \field{sortinithash}{Q}
+    \field{title}{Qt - QXmlStreamWriter Klasse}
+    \verb{url}
+    \verb http://doc.qt.io/qt-4.8/qxmlstreamwriter.html
+    \endverb
+    \field{month}{07}
+    \field{year}{2017}
+  \endentry
+
+  \entry{QtSAS}{online}{}
+    \name{author}{1}{}{%
+      {{hash=Q}{%
+         family={Qt},
+         familyi={Q\bibinitperiod},
+      }}%
+    }
+    \list{language}{1}{%
+      {EN}%
+    }
+    \list{organization}{1}{%
+      {Qt}%
+    }
+    \strng{namehash}{Q1}
+    \strng{fullhash}{Q1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{Qt17}
+    \field{extraalpha}{10}
+    \field{sortinit}{Q}
+    \field{sortinithash}{Q}
+    \field{title}{Qt - Signals and Slots}
+    \verb{url}
+    \verb http://doc.qt.io/qt-4.8/signalsandslots.html
+    \endverb
+    \field{month}{07}
+    \field{year}{2017}
+  \endentry
+
+  \entry{WK9241}{online}{}
+    \field{labeltitlesource}{title}
+    \field{labelalpha}{Wk9}
+    \field{sortinit}{W}
+    \field{sortinithash}{W}
+    \field{title}{EN ISO 9241}
+    \verb{url}
+    \verb https://de.wikipedia.org/wiki/EN_ISO_9241#EN_ISO_9241-11_Anforderunge
+    \verb n_an_die_Gebrauchstauglichkeit
+    \endverb
+    \field{month}{07}
+    \field{year}{2017}
+  \endentry
+\endsortlist
+\endinput
